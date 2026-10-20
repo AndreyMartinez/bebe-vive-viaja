@@ -1,0 +1,22 @@
+---
+import { url } from '../lib/url';
+import Base from '../layouts/Base.astro';
+---
+<Base title="Página no encontrada">
+  <main class="nf">
+    <div class="in">
+      <span class="label">Error 404</span>
+      <h1>Este camino <em>no existe</em></h1>
+      <p>La página que buscas se movió o nunca existió.</p>
+      <a class="btn solid" href={url('/')}>Volver al inicio</a>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .nf { background: var(--mist); color: var(--mist-ink); }
+  .in { min-height: 70vh; padding-block: 120px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 24px; }
+  h1 { font-family: var(--serif); font-size: clamp(56px, 9vw, 120px); line-height: 0.92; }
+  h1 em { opacity: 0.75; }
+  p { font-size: 18px; font-weight: 300; }
+</style>

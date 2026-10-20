@@ -1,0 +1,166 @@
+---
+import { url } from '../../lib/url';
+import Base from '../../layouts/Base.astro';
+import Chapter from '../../components/Chapter.astro';
+import Countdown from '../../components/islands/Countdown.tsx';
+import Checklist from '../../components/islands/Checklist.tsx';
+import mandala from '../../assets/brand/mandala.png';
+import { getImage } from 'astro:assets';
+import { getViajes, departure, arrivalHome, longDate, codeDate, type Viaje } from '../../lib/viajes';
+import { site, whatsappLink } from '../../config/site';
+
+export async function getStaticPaths() {
+  const { all } = await getViajes();
+  return all.map((v) => ({ params: { slug: v.id }, props: { viaje: v } }));
+}
+
+const { viaje } = Astro.props as { viaje: Viaje };
+const d = viaje.data;
+const departAt = departure(viaje);
+const endAt = arrivalHome(viaje);
+const cover = await getImage({ src: d.cover, width: 2000, format: 'webp' });
+const og = await getImage({ src: d.cover, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+const wa = whatsappLink(`Hola, quiero apartar lugar para ${d.title} + ${d.titleAccent} (${longDate(d.date)})`);
+---
+<Base title={`${d.title} & ${d.titleAccent}`} description={d.summary} image={og.src} credits={d.credits}>
+  <header class="hero on-dark">
+    <div class="photo" style={`background-image:url(${cover.src})`} role="img" aria-label={d.coverAlt}></div>
+    <div class="in">
+      <div class="topbar">
+        <a href={url('/')} class="home" aria-label={`${site.name}, inicio`}><span class="logo mandala" style={`--src:url(${mandala.src})`}></span></a>
+        <span class="label">Itinerario · Nº {codeDate(d.date)}</span>
+      </div>
+      <div class="hero-main">
+        <span class="label">{site.name} presenta</span>
+        <h1>{d.title} <span class="amp">&amp;</span> {d.titleAccent}<span class="sans">{d.subtitle}</span></h1>
+      </div>
+      <div class="hero-foot">
+        <dl class="facts-row">
+          <div><dt class="label">Fecha</dt><dd>{longDate(d.date)}</dd></div>
+          <div><dt class="label">Horario</dt><dd>{d.start} — {d.end}</dd></div>
+          <div><dt class="label">Salidas</dt><dd>{d.origins.join(' · ')}</dd></div>
+        </dl>
+        <Countdown client:load departAt={departAt} endAt={endAt} />
+      </div>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Capítulos del día">
+    <div class="in" style={`--n:${d.chapters.length}`}>
+      {d.chapters.map((c, i) => (
+        <a href={`#${c.id}`}><span class="label">{['I','II','III','IV','V','VI','VII','VIII'][i]} · {c.start}</span><b>{c.tocLabel}</b></a>
+      ))}
+    </div>
+  </nav>
+
+  {d.chapters.map((ch, i) => <Chapter ch={ch} index={i} />)}
+
+  <section class="list">
+    <div class="in">
+      {d.checklist.length > 0 && (
+        <div>
+          <span class="label muted">Antes de salir</span>
+          <h2>Qué <em>llevar</em></h2>
+          <Checklist client:visible items={d.checklist} storageKey={`bvv-check-${viaje.id}`} />
+        </div>
+      )}
+      <div>
+        <span class="label muted">En resumen</span>
+        <h2>Datos <em>rápidos</em></h2>
+        <dl class="kv">{d.quickFacts.map((q) => <div><dt>{q.label}</dt><dd>{q.value}</dd></div>)}</dl>
+        {wa && (
+          <a class="btn solid cta" href={wa} target="_blank" rel="noopener">
+            Apartar mi lugar
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script define:vars={{ date: d.date.toISOString().slice(0, 10), offset: d.utcOffset }}>
+  // Marca el capítulo que está ocurriendo ahora, solo el día del viaje.
+  function mark() {
+    const now = Date.now();
+    document.querySelectorAll('.ch[data-start]').forEach((el) => {
+      const a = Date.parse(`${date}T${el.dataset.start}:00${offset}`);
+      const b = Date.parse(`${date}T${el.dataset.end}:00${offset}`);
+      el.classList.toggle('is-now', now >= a && now < b);
+    });
+  }
+  mark();
+  setInterval(mark, 30000);
+</script>
+
+<style>
+  .hero { position: relative; color: #fff; isolation: isolate; overflow: hidden; background: #2a3540; }
+  .photo { position: absolute; inset: 0; z-index: -2; background: center 40% / cover; transform: scale(1.04); animation: kb 24s ease-out forwards; }
+  @keyframes kb { to { transform: scale(1); } }
+  .hero::after {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(180deg, rgba(10,14,20,.45) 0%, rgba(10,14,20,.05) 35%, rgba(10,14,20,.2) 60%, rgba(10,14,20,.82) 100%);
+  }
+  .hero .in { min-height: min(760px, 96vh); padding-block: 28px 40px; display: grid; grid-template-rows: auto 1fr auto; gap: 24px; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .mandala { display: block; width: 92px; aspect-ratio: 456 / 290; color: #fff; }
+  .topbar .label { opacity: 0.85; text-align: right; }
+  .hero-main { align-self: end; display: flex; flex-direction: column; gap: 22px; }
+  .hero-main > .label { opacity: 0.85; }
+  h1 { font-family: var(--serif); font-size: clamp(64px, 13vw, 168px); line-height: 0.86; letter-spacing: -0.025em; }
+  .amp { font-style: italic; color: var(--gold); }
+  .sans { display: block; font-family: var(--sans); font-weight: 300; font-size: 0.38em; letter-spacing: 0.32em; text-transform: uppercase; margin-top: 0.35em; }
+  .hero-foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 28px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,.3); padding-top: 20px; }
+  .facts-row { display: flex; gap: 36px; flex-wrap: wrap; margin: 0; }
+  .facts-row div { display: flex; flex-direction: column; gap: 2px; }
+  .facts-row dt { opacity: 0.7; }
+  .facts-row dd { margin: 0; font-size: 17px; }
+  .hero-foot :global(.cd) { display: flex; align-items: flex-end; }
+  .hero-foot :global(.cd .u) { display: flex; flex-direction: column; align-items: center; padding: 0 14px; border-left: 1px solid rgba(255,255,255,.3); }
+  .hero-foot :global(.cd .u:first-child) { border-left: 0; padding-left: 0; }
+  .hero-foot :global(.cd .u b) { font-family: var(--serif); font-weight: 400; font-size: 46px; line-height: 1; font-variant-numeric: tabular-nums; }
+  .hero-foot :global(.cd .u span) { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.7; }
+  .hero-foot :global(.cd-msg) { font-size: 15px; max-width: 32ch; }
+
+  .toc { background: var(--white); border-bottom: 1px solid var(--hair); }
+  .toc .in { display: grid; grid-template-columns: repeat(var(--n), minmax(150px, 1fr)); overflow-x: auto; }
+  .toc a { display: flex; flex-direction: column; gap: 4px; padding: 20px 18px; text-decoration: none; border-right: 1px solid var(--hair); min-width: 0; }
+  .toc a:first-child { padding-left: 0; }
+  .toc a:last-child { border-right: 0; }
+  .toc .label { color: var(--ink-2); }
+  .toc b { font-weight: 500; font-size: 15px; line-height: 1.3; }
+  .toc a:hover b { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+
+  .list .in { padding-block: 104px; display: grid; grid-template-columns: 1fr 1fr; gap: 72px; }
+  .list .in > * { min-width: 0; }
+  .muted { color: var(--ink-2); }
+  .list h2 { font-family: var(--serif); font-size: 48px; line-height: 1; margin: 6px 0 28px; }
+  .list :global(.check) { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+  .list :global(.check label) { display: flex; gap: 16px; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--hair); cursor: pointer; }
+  .list :global(.check input) {
+    appearance: none; -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--ink);
+    flex: none; display: grid; place-items: center; margin: 0; cursor: pointer; transition: background 0.2s;
+  }
+  .list :global(.check input:checked) { background: var(--ink); }
+  .list :global(.check input:checked::after) { content: ''; width: 5px; height: 9px; border: solid var(--white); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg) translate(-1px, -1px); }
+  .list :global(.check input:checked + span) { color: var(--ink-2); text-decoration: line-through; text-decoration-thickness: 1px; }
+  .list :global(.check small) { display: block; font-size: 13px; color: var(--ink-2); font-weight: 300; }
+  .list :global(.prog) { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 18px; }
+  .list :global(.prog .bar) { flex: 1; height: 1px; background: var(--hair); position: relative; }
+  .list :global(.prog .bar i) { position: absolute; left: 0; top: -1px; height: 3px; width: 0; background: var(--ink); transition: width 0.4s; }
+  .list :global(.prog .label) { color: var(--ink-2); }
+  .kv { margin: 0; border-top: 1px solid var(--ink); }
+  .kv div { display: grid; grid-template-columns: 120px 1fr; gap: 16px; padding: 15px 0; border-bottom: 1px solid var(--hair); }
+  .kv dt { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2); padding-top: 4px; }
+  .kv dd { margin: 0; font-size: 16px; }
+  .cta { margin-top: 32px; }
+
+  @media (max-width: 900px) { .list .in { grid-template-columns: 1fr; gap: 56px; } }
+  @media (max-width: 560px) {
+    .hero-foot { flex-direction: column; align-items: flex-start; }
+    .hero-foot :global(.cd .u) { padding: 0 10px; }
+    .hero-foot :global(.cd .u b) { font-size: 36px; }
+    .kv div { grid-template-columns: 96px 1fr; }
+    .list .in { padding-block: 72px; }
+  }
+</style>

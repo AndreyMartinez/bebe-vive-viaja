@@ -1,0 +1,10 @@
+// Despliegue en Cloudflare Workers (plan gratis, uso comercial permitido).
+// `npm run build && npx wrangler deploy` sube la carpeta dist/ como sitio estático.
+{
+  "name": "bebe-vive-viaja",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

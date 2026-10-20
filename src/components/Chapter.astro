@@ -1,0 +1,204 @@
+---
+import type { Viaje } from '../lib/viajes';
+import Photo from './Photo.astro';
+import RailControls from './islands/RailControls.tsx';
+
+type Ch = Viaje['data']['chapters'][number];
+interface Props {
+  ch: Ch;
+  index: number;
+}
+const { ch, index } = Astro.props;
+const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'][index] ?? String(index + 1);
+const dark = ch.theme === 'dusk' || ch.theme === 'night';
+const railId = `rail-${ch.id}`;
+---
+<section class:list={['ch', `ch-${ch.theme}`, { compact: ch.compact, 'on-dark': dark }]} id={ch.id} data-start={ch.start} data-end={ch.end}>
+  {ch.theme === 'night' && <div class="stars" aria-hidden="true"></div>}
+  <div class="in body">
+    <div class="head">
+      <div class="clock">
+        <span class="label">Capítulo {roman} · {ch.kicker}</span>
+        <span class="t">{ch.start}</span>
+        <span class="now">Ahora</span>
+      </div>
+      <div>
+        <h2>{ch.heading} {ch.headingEm && <em>{ch.headingEm}</em>}</h2>
+        <p class="lead">{ch.lead}</p>
+        {ch.tags.length > 0 && (
+          <div class="tags">{ch.tags.map((t) => <span class:list={['tag', { tbd: t.tbd }]}>{t.text}</span>)}</div>
+        )}
+        {ch.stats.length > 0 && (
+          <div class="stats">{ch.stats.map((s) => <div><b>{s.value}</b><span class="label">{s.label}</span></div>)}</div>
+        )}
+      </div>
+    </div>
+
+    {ch.feature && (
+      <div class="feature">
+        <figure>
+          <Photo src={ch.feature.image} alt={ch.feature.alt} caption={ch.feature.caption[0]} ratio="4/3" />
+          <figcaption class="cap"><span>{ch.feature.caption[0]}</span><span>{ch.feature.caption[1]}</span></figcaption>
+        </figure>
+        <div class="side">
+          {ch.feature.note && <div class="note"><span class="label">Nota</span><span>{ch.feature.note}</span></div>}
+          {ch.feature.fact && (
+            <div class="facts one">
+              <div class:list={['fact', { big: !!ch.feature.fact.num }]}>
+                <span class="label">{ch.feature.fact.label}</span>
+                {ch.feature.fact.num && <span class="num">{ch.feature.fact.num}</span>}
+                {ch.feature.fact.text}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    )}
+
+    {ch.quote && (
+      <div class="feature center">
+        <figure>
+          <Photo src={ch.quote.image} alt={ch.quote.alt} caption={ch.quote.caption[0]} ratio="4/3" />
+          <figcaption class="cap"><span>{ch.quote.caption[0]}</span><span>{ch.quote.caption[1]}</span></figcaption>
+        </figure>
+        <blockquote class="story">
+          <span class="label">{ch.quote.label}</span>
+          <p>{ch.quote.text}</p>
+        </blockquote>
+      </div>
+    )}
+
+    {ch.places.length > 0 && (
+      <div class="rail-wrap">
+        <div class="rail-head">
+          <h3>{ch.placesTitle} {ch.placesTitleEm && <em>{ch.placesTitleEm}</em>}</h3>
+          <RailControls client:visible target={railId} />
+        </div>
+        <div class="rail" id={railId}>
+          {ch.places.map((p, i) => (
+            <article class="place">
+              <Photo src={p.image} alt={p.alt} caption={p.title} ratio="4/5" sizes="(max-width: 560px) 82vw, 360px" />
+              <div class="meta label"><span>{String(i + 1).padStart(2, '0')}</span><span>{p.meta}</span></div>
+              <h4>{p.title}</h4>
+              <p>{p.text}</p>
+              {p.more.length > 0 && (
+                <details class="more">
+                  <summary>Leer más</summary>
+                  <div class="dm">{p.more.map((m) => <p>{m}</p>)}</div>
+                </details>
+              )}
+            </article>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {ch.facts.length > 0 && (
+      <div class="facts">
+        {ch.facts.map((f) => (
+          <div class:list={['fact', { big: false }]}>
+            <span class="label">{f.label}</span>
+            {f.num && <span class="num">{f.num}</span>}
+            {f.text}
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .ch { position: relative; isolation: isolate; overflow: hidden; counter-reset: dato; }
+  .body { padding-block: 104px; display: flex; flex-direction: column; gap: 56px; }
+  .compact .body { padding-block: 88px; }
+  .ch-mist { background: var(--mist); color: var(--mist-ink); }
+  .ch-paper { background: var(--paper); color: var(--ink); }
+  .ch-sage { background: var(--sage); color: var(--sage-ink); }
+  .ch-dusk { background: linear-gradient(170deg, var(--dusk-a) 0%, var(--dusk-b) 50%, var(--dusk-c) 100%); color: #fff; }
+  .ch-night { background: var(--night); color: #e9e7f2; }
+
+  .head { display: grid; grid-template-columns: 220px 1fr; gap: 24px 48px; align-items: start; }
+  .head > * { min-width: 0; }
+  .head .tags, .head .stats { margin-top: 22px; }
+  .clock { display: flex; flex-direction: column; gap: 10px; border-top: 1px solid currentColor; padding-top: 14px; }
+  .clock .t { font-family: var(--serif); font-size: clamp(64px, 8vw, 96px); line-height: 0.85; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .clock .label { opacity: 0.75; }
+  .now {
+    display: none; align-self: flex-start; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.16em; text-transform: uppercase; padding: 5px 10px; border: 1px solid currentColor; border-radius: 999px;
+  }
+  .now::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: pulse 1.4s ease-in-out infinite; }
+  :global(.ch.is-now) .now { display: inline-flex; }
+  @keyframes pulse { 50% { opacity: 0.2; } }
+  h2 { font-family: var(--serif); font-size: clamp(42px, 6.2vw, 80px); line-height: 0.98; letter-spacing: -0.015em; max-width: 15ch; }
+  h2 em { opacity: 0.75; }
+  .lead { font-size: 18px; line-height: 1.65; max-width: 56ch; margin-top: 22px; font-weight: 300; }
+
+  .stats { display: flex; gap: 44px; flex-wrap: wrap; }
+  .stats div { display: flex; flex-direction: column; gap: 4px; }
+  .stats b { font-family: var(--serif); font-weight: 400; font-size: 64px; line-height: 0.9; }
+  .stats .label { opacity: 0.8; }
+
+  .feature { display: grid; grid-template-columns: 7fr 5fr; gap: 48px; align-items: end; }
+  .feature.center { align-items: center; }
+  .feature > * { min-width: 0; }
+  .feature :global(.ph) { border-radius: 2px; }
+  .side { display: flex; flex-direction: column; gap: 40px; }
+  .facts.one { grid-template-columns: 1fr; }
+  .note {
+    display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; border-top: 1px solid currentColor;
+    border-bottom: 1px solid currentColor; padding: 16px 0; font-size: 15px; font-weight: 300;
+  }
+  .note .label { padding-top: 3px; }
+
+  .story { position: relative; margin: 0; padding-top: 8px; max-width: 820px; }
+  .story .label { display: block; margin-bottom: 18px; opacity: 0.7; }
+  .story::before { content: '“'; position: absolute; top: -70px; left: -8px; font-family: var(--serif); font-size: 200px; line-height: 1; opacity: 0.22; }
+  .story p { font-family: var(--serif); font-size: clamp(24px, 2.8vw, 34px); line-height: 1.28; letter-spacing: -0.005em; }
+
+  .rail-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; border-top: 1px solid currentColor; padding-top: 16px; }
+  .rail-head h3 { font-family: var(--serif); font-size: clamp(30px, 3.6vw, 44px); line-height: 1; }
+  .rail-head :global(.arrows) { display: flex; gap: 8px; }
+  .rail-head :global(.arrows button) {
+    width: 46px; height: 46px; border-radius: 50%; border: 1px solid currentColor; background: transparent; color: inherit;
+    display: grid; place-items: center; cursor: pointer; transition: background 0.2s, color 0.2s, opacity 0.2s;
+  }
+  .rail-head :global(.arrows button:hover:not(:disabled)) { background: currentColor; }
+  .rail-head :global(.arrows button:hover:not(:disabled) svg) { stroke: var(--sage); }
+  .rail-head :global(.arrows button:disabled) { opacity: 0.3; cursor: default; }
+  .rail-head :global(.arrows svg) { width: 18px; height: 18px; }
+  .rail {
+    display: grid; grid-auto-flow: column; grid-auto-columns: minmax(280px, 360px); gap: 28px; overflow-x: auto;
+    scroll-snap-type: x mandatory; padding-bottom: 12px; scrollbar-width: thin; margin-top: 28px;
+  }
+  .place { scroll-snap-align: start; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .place :global(.ph) { border-radius: 2px; }
+  .place .meta { display: flex; justify-content: space-between; gap: 10px; opacity: 0.7; }
+  .place h4 { font-family: var(--serif); font-size: 30px; line-height: 1.05; }
+  .place p { font-size: 15px; font-weight: 300; line-height: 1.55; }
+  details.more summary {
+    cursor: pointer; list-style: none; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    display: inline-flex; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid currentColor;
+  }
+  details.more summary::-webkit-details-marker { display: none; }
+  details.more summary::after { content: '+'; font-size: 14px; }
+  details.more[open] summary::after { content: '–'; }
+  details.more .dm { display: flex; flex-direction: column; gap: 8px; padding-top: 10px; font-size: 14px; font-weight: 300; }
+
+  .stars {
+    position: absolute; inset: 0; z-index: -1; opacity: 0.6;
+    background-image: radial-gradient(1px 1px at 12% 22%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 32% 64%, #fff 50%, transparent 51%),
+      radial-gradient(1.4px 1.4px at 71% 28%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 86% 72%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 56% 14%, #fff 50%, transparent 51%), radial-gradient(1.4px 1.4px at 22% 86%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 93% 10%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 46% 48%, #fff 50%, transparent 51%);
+  }
+
+  @media (max-width: 900px) {
+    .head { grid-template-columns: 1fr; }
+    .feature { grid-template-columns: 1fr; gap: 28px; }
+  }
+  @media (max-width: 560px) {
+    .body { padding-block: 72px; gap: 40px; }
+    .rail { grid-auto-columns: 82%; }
+  }
+</style>

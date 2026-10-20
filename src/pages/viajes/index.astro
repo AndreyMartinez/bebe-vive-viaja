@@ -1,0 +1,40 @@
+---
+import { url } from '../../lib/url';
+import Base from '../../layouts/Base.astro';
+import TripCard from '../../components/TripCard.astro';
+import mandala from '../../assets/brand/mandala.png';
+import { getViajes } from '../../lib/viajes';
+import { site } from '../../config/site';
+
+const { proximos, pasados } = await getViajes();
+---
+<Base title="Viajes" description={`Todos los viajes de ${site.name}: próximos y anteriores.`}>
+  <header class="top">
+    <div class="in">
+      <a href={url('/')} aria-label={`${site.name}, inicio`}><span class="logo mandala" style={`--src:url(${mandala.src})`}></span></a>
+      <h1>Todos los <em>viajes</em></h1>
+    </div>
+  </header>
+  <section class="in sec">
+    <span class="label muted">Próximos</span>
+    {proximos.length ? <div class="grid">{proximos.map((v, i) => <TripCard viaje={v} index={i} />)}</div> : <p>Pronto anunciamos el siguiente.</p>}
+  </section>
+  {pasados.length > 0 && (
+    <section class="in sec">
+      <span class="label muted">Anteriores</span>
+      <div class="grid">{pasados.map((v, i) => <TripCard viaje={v} index={i} past />)}</div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .top { background: var(--ink); color: #fff; }
+  .top .in { padding-block: 40px 72px; display: flex; flex-direction: column; gap: 56px; }
+  .mandala { display: block; width: 92px; aspect-ratio: 456 / 290; color: #fff; }
+  h1 { font-family: var(--serif); font-size: clamp(56px, 9vw, 120px); line-height: 0.9; letter-spacing: -0.02em; }
+  h1 em { color: var(--gold); }
+  .sec { padding-block: 72px 24px; display: flex; flex-direction: column; gap: 28px; }
+  .sec:last-of-type { padding-bottom: 104px; }
+  .muted { color: var(--ink-2); border-top: 1px solid var(--ink); padding-top: 14px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: 56px 40px; }
+</style>

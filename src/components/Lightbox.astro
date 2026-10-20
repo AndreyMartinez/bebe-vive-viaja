@@ -1,0 +1,57 @@
+---
+/** Visor de fotos: cualquier elemento con [data-full] abre la imagen en grande. */
+---
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Foto en grande">
+  <figure>
+    <img id="lb-img" alt="" />
+    <figcaption id="lb-cap"></figcaption>
+  </figure>
+  <button class="close" type="button" aria-label="Cerrar">×</button>
+</div>
+
+<script>
+  const lb = document.getElementById('lb')!;
+  const img = document.getElementById('lb-img') as HTMLImageElement;
+  const cap = document.getElementById('lb-cap')!;
+  let last: HTMLElement | null = null;
+
+  function open(el: HTMLElement) {
+    last = el;
+    img.src = el.dataset.full!;
+    img.alt = el.dataset.cap ?? '';
+    cap.textContent = el.dataset.cap ?? '';
+    lb.hidden = false;
+    (lb.querySelector('.close') as HTMLButtonElement).focus();
+  }
+  function close() {
+    lb.hidden = true;
+    last?.focus();
+  }
+  document.querySelectorAll<HTMLElement>('[data-full]').forEach((el) => {
+    el.tabIndex = 0;
+    el.setAttribute('role', 'button');
+    el.addEventListener('click', () => open(el));
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(el); }
+    });
+  });
+  lb.addEventListener('click', close);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !lb.hidden) close(); });
+</script>
+
+<style>
+  .lb {
+    position: fixed; inset: 0; z-index: 50; background: rgba(8, 10, 14, 0.92);
+    display: grid; place-items: center; cursor: zoom-out;
+    padding: max(20px, env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-right, 0px))
+      max(20px, env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px));
+  }
+  figure { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  img { max-width: 100%; max-height: 84vh; width: auto; }
+  figcaption { color: #fff; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.75; }
+  .close {
+    position: absolute; top: max(16px, env(safe-area-inset-top, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
+    width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.4);
+    background: transparent; color: #fff; font-size: 24px; cursor: pointer;
+  }
+</style>

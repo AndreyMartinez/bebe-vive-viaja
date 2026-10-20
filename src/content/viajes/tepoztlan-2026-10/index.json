@@ -1,0 +1,188 @@
+{
+  "title": "Paracaídas",
+  "titleAccent": "Tepoztlán",
+  "subtitle": "Un día en Morelos",
+  "summary": "Caída libre por la mañana sobre los valles de Morelos, tarde libre en el Pueblo Mágico de Tepoztlán y convivio al aire libre al caer el sol.",
+  "date": "2026-10-24",
+  "start": "06:00",
+  "end": "21:00",
+  "utcOffset": "-06:00",
+  "region": "Morelos, México",
+  "origins": ["CDMX", "Toluca"],
+  "status": "abierto",
+  "cover": "./vista.jpg",
+  "coverAlt": "Vista de Tepoztlán desde la pirámide del Tepozteco",
+  "sunset": "18:07",
+  "chapters": [
+    {
+      "id": "cielo",
+      "start": "06:00",
+      "end": "12:00",
+      "kicker": "Salida",
+      "theme": "mist",
+      "tocLabel": "El salto",
+      "heading": "Primero,",
+      "headingEm": "el cielo",
+      "lead": "Salimos de Ciudad de México y Toluca rumbo a Morelos. Entre las 8:00 y las 8:30 llegamos a Skydive: registro, instrucciones de seguridad y salto en tándem. Somos unas cinco personas saltando, así que este bloque dura de tres a cuatro horas. El desayuno es ahí mismo.",
+      "tags": [
+        { "text": "Desayuno en Skydive" },
+        { "text": "Salto en tándem" },
+        { "text": "Puntos de abordaje por confirmar", "tbd": true }
+      ],
+      "feature": {
+        "image": "./salto.jpg",
+        "alt": "Salto en tándem en caída libre",
+        "caption": ["Caída libre", "Entre 08:30 y 12:00"],
+        "fact": { "label": "Velocidad", "num": "200 km/h", "text": "Es la velocidad terminal en caída libre. Se siente como viento fuerte, no como caer." }
+      },
+      "facts": [
+        { "label": "c. 1485", "text": "Leonardo da Vinci dibujó un paracaídas piramidal. En el año 2000 se construyó la réplica, se probó en un salto y funcionó." },
+        { "label": "1797", "text": "André-Jacques Garnerin hizo el primer descenso con paracaídas registrado, desde un globo sobre París." },
+        { "label": "Antes de saltar", "text": "Lleva tu INE, tenis bien amarrados y nada de alcohol antes del salto." }
+      ]
+    },
+    {
+      "id": "camino",
+      "start": "12:00",
+      "end": "13:00",
+      "kicker": "Aprox.",
+      "theme": "paper",
+      "tocLabel": "El camino",
+      "heading": "Del cielo",
+      "headingEm": "al pueblo",
+      "lead": "Al terminar los saltos vamos directo a Tepoztlán. Calculamos salir de Skydive a más tardar a las 12:00.",
+      "compact": true
+    },
+    {
+      "id": "pueblo",
+      "start": "13:00",
+      "end": "18:30",
+      "kicker": "Tarde libre",
+      "theme": "sage",
+      "tocLabel": "Tepoztlán",
+      "heading": "Tepoztlán,",
+      "headingEm": "a tu ritmo",
+      "lead": "Al llegar te damos la guía digital del pueblo y la tarde es tuya. Durante el día te buscamos para tomarte fotos, que ya vienen incluidas.",
+      "tags": [{ "text": "Guía digital" }, { "text": "Fotos incluidas" }],
+      "quote": {
+        "image": "./centro.jpg",
+        "alt": "Calle empedrada del centro de Tepoztlán con el cerro al fondo",
+        "caption": ["El centro", "Calles empedradas y el cerro de fondo"],
+        "label": "La leyenda de Tepoztécatl",
+        "text": "Hijo de una doncella del pueblo, fue abandonado de bebé y criado por unos ancianos. Ya grande venció a una serpiente gigante que devoraba ancianos: se dejó tragar y la cortó por dentro con navajas de obsidiana. Hoy su templo corona el cerro."
+      },
+      "placesTitle": "Qué ver",
+      "placesTitleEm": "y probar",
+      "places": [
+        {
+          "image": "./tepozteco.jpg", "alt": "Pirámide del Tepozteco entre la niebla",
+          "meta": "Siglos XII – XIV", "title": "Pirámide del Tepozteco",
+          "text": "Templo tlahuica en la cima del cerro, dedicado a Tepoztécatl, dios del pulque y la fertilidad.",
+          "more": [
+            "El cerro está dentro del Parque Nacional El Tepozteco, decretado en 1937.",
+            "La subida es exigente: de 1 a 1.5 h de ida por escalones de piedra, y el acceso cierra temprano. Después del salto, piénsalo bien."
+          ]
+        },
+        {
+          "image": "./convento.jpg", "alt": "Ex Convento de la Natividad",
+          "meta": "1555 – 1580", "title": "Ex Convento de la Natividad",
+          "text": "Construido por frailes dominicos con mano de obra indígena. Hoy es museo.",
+          "more": [
+            "Patrimonio Mundial de la UNESCO desde 1994, junto con otros monasterios del siglo XVI en las faldas del Popocatépetl.",
+            "Cada septiembre la comunidad arma en la entrada del templo un mural gigante hecho solo con semillas."
+          ]
+        },
+        {
+          "image": "./arcos.jpg", "alt": "Arcos del convento con los cerros de fondo",
+          "meta": "Planta alta del convento", "title": "El mirador de los arcos",
+          "text": "Arcos que enmarcan los cerros. De las mejores fotos del pueblo."
+        },
+        {
+          "image": "./mercado.jpg", "alt": "Pasillos del mercado de Tepoztlán",
+          "meta": "Fin de semana", "title": "Mercado y artesanías",
+          "text": "Ropa de manta, cuarzos, alebrijes y barro. Lleva efectivo."
+        },
+        {
+          "image": "./comida.jpg", "alt": "Itacate de maíz azul",
+          "meta": "Para comer", "title": "Itacates y nieves",
+          "text": "Itacate de maíz azul, quesadillas de huitlacoche y nieves de sabores raros, como pétalo de rosa o mole."
+        },
+        {
+          "image": "./chinelos.jpg", "alt": "Chinelo con traje bordado",
+          "meta": "Tradición de Morelos", "title": "Los chinelos",
+          "text": "Bailarines con máscaras de barba puntiaguda que nacieron para burlarse de los españoles."
+        }
+      ],
+      "facts": [
+        { "label": "El nombre", "text": "Tepoztlán viene del náhuatl y suele traducirse como “lugar del cobre”." },
+        { "label": "Pueblo Mágico", "num": "2002", "text": "De los primeros del país en recibir el nombramiento." },
+        { "label": "Fama mística", "text": "Desde los años 60 atrae buscadores espirituales, temazcales e historias de ovnis." },
+        { "label": "Para brindar", "text": "Aquí el pulque tiene su propio dios. Si lo ves curado de fruta, pruébalo." }
+      ]
+    },
+    {
+      "id": "ocaso",
+      "start": "18:30",
+      "end": "21:00",
+      "kicker": "Convivio",
+      "theme": "dusk",
+      "tocLabel": "El atardecer",
+      "heading": "Atardecer,",
+      "headingEm": "todos juntos",
+      "lead": "Nos juntamos en una terraza con vista o un jardín al aire libre. Se espera clima cálido y sin lluvia. Cada quien pide sus tragos.",
+      "tags": [{ "text": "Terraza por confirmar", "tbd": true }],
+      "stats": [
+        { "value": "18:07", "label": "Se pone el sol" },
+        { "value": "17:45", "label": "Llega para verlo" }
+      ],
+      "feature": {
+        "image": "./atardecer.jpg",
+        "alt": "Sol sobre los cerros de Tepoztlán",
+        "caption": ["El cielo de Tepoztlán", "18:07"],
+        "note": "El sol se oculta antes de la hora de reunión. Si llegas como a las 17:45 ves todo el cielo naranja desde la terraza.",
+        "fact": { "label": "Por qué se pinta de rojo", "text": "Los cerros que rodean el valle son de roca volcánica y se encienden con la última luz." }
+      }
+    },
+    {
+      "id": "regreso",
+      "start": "21:00",
+      "end": "23:59",
+      "kicker": "En punto",
+      "theme": "night",
+      "tocLabel": "El regreso",
+      "heading": "De vuelta",
+      "headingEm": "a casa",
+      "lead": "Punto de reunión para todos, incluso si alguien se fue a otro bar. Regresamos a Ciudad de México y Toluca y dejamos a cada quien en su punto de abordaje.",
+      "compact": true
+    }
+  ],
+  "checklist": [
+    { "text": "Identificación oficial", "hint": "La piden en Skydive" },
+    { "text": "Tenis cómodos", "hint": "Nada de sandalias para el salto" },
+    { "text": "Protector solar y gorra" },
+    { "text": "Efectivo", "hint": "Para el mercado y los puestos" },
+    { "text": "Chamarra ligera", "hint": "La noche refresca" },
+    { "text": "Batería portátil" },
+    { "text": "Botella de agua" }
+  ],
+  "quickFacts": [
+    { "label": "Fecha", "value": "Sábado 24 de octubre de 2026" },
+    { "label": "Salida", "value": "06:00 · CDMX y Toluca" },
+    { "label": "Regreso", "value": "21:00 desde Tepoztlán" },
+    { "label": "Incluye", "value": "Transporte redondo, guía digital y fotos del día" },
+    { "label": "Clima", "value": "Día cálido y sin lluvia, noche fresca" },
+    { "label": "Atardecer", "value": "18:07" }
+  ],
+  "credits": [
+    { "file": "Vista de la ciudad de Tepoztlán desde la pirámide del Tepozteco", "author": "Irisbb221b", "license": "CC BY 4.0" },
+    { "file": "Parachuting at the Lublin-Radawiec airfield, 2022 04", "author": "Autor desconocido", "license": "Dominio público" },
+    { "file": "Centro de Tepoztlan, Morelos", "author": "Rafael Moriyama Inukai", "license": "CC BY-SA 4.0" },
+    { "file": "Tepozteco La piramide al borde del barranco entre el misterio de la niebla", "author": "Ricardo Navarro", "license": "CC BY-SA 3.0" },
+    { "file": "Ex-convent of Dominico de la Nativdad - panoramio", "author": "On^ste82", "license": "CC BY 3.0" },
+    { "file": "El mirador del convento de la Natividad", "author": "Barocount", "license": "CC BY-SA 4.0" },
+    { "file": "El mercado de Tepoztlan", "author": "A Traveling Student", "license": "CC BY-SA 4.0" },
+    { "file": "Itacate de Tepoztlán 2022", "author": "Silvia Andrea González Linarte", "license": "CC BY-SA 4.0" },
+    { "file": "Chinelo LGBT+", "author": "Mario Yaír TS", "license": "CC BY-SA 4.0" },
+    { "file": "Amanecer en Tepoztlan (8690780635)", "author": "Amado Demesa", "license": "CC BY-SA 2.0" }
+  ]
+}

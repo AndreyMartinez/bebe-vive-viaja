@@ -1,0 +1,28 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  caption?: string;
+  ratio?: string;
+  sizes?: string;
+  class?: string;
+  eager?: boolean;
+}
+const { src, alt, caption, ratio, sizes = '(max-width: 900px) 100vw, 700px', class: cls, eager = false } = Astro.props;
+const full = await getImage({ src, width: Math.min(1600, src.width), format: 'webp', quality: 90 });
+---
+<div class={['ph', cls].filter(Boolean).join(' ')} style={ratio ? `aspect-ratio:${ratio}` : undefined} data-full={full.src} data-cap={caption ?? alt}>
+  <Image
+    src={src}
+    alt={alt}
+    widths={[400, 700, 1000, Math.min(1400, src.width)]}
+    sizes={sizes}
+    format="webp"
+    quality={90}
+    loading={eager ? 'eager' : 'lazy'}
+    fetchpriority={eager ? 'high' : undefined}
+  />
+</div>

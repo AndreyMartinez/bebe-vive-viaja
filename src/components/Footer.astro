@@ -1,0 +1,47 @@
+---
+import { url } from '../lib/url';
+import wordmark from '../assets/brand/wordmark.png';
+import { site, whatsappLink } from '../config/site';
+
+interface Props {
+  credits?: { file: string; author: string; license: string }[];
+}
+const { credits = [] } = Astro.props;
+const wa = whatsappLink('Hola, quiero info de los próximos viajes');
+const year = new Date().getFullYear();
+---
+<footer class="ft on-dark">
+  <div class="in">
+    <a href={url('/')} aria-label={`${site.name}, inicio`}>
+      <span class="logo word" style={`--src:url(${wordmark.src})`}></span>
+    </a>
+    <div class="icons" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 13l8-2 5-7h2l-2 7 5-1 2-3h1.5l-1 4 1 4H22l-2-3-5-1 2 7h-2l-5-7-8-2z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M5 19c0-8 6-14 15-14 0 9-6 15-14 15M5 19l7-7"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M7 3h10l-1 7a4 4 0 0 1-8 0L7 3zM12 14v6M8 21h8"/></svg>
+    </div>
+    <nav class="links" aria-label="Pie de página">
+      <a href={url('/viajes/')}>Viajes</a>
+      {wa && <a href={wa} target="_blank" rel="noopener">WhatsApp</a>}
+      {site.instagram && <a href={`https://instagram.com/${site.instagram}`} target="_blank" rel="noopener">Instagram</a>}
+    </nav>
+    {credits.length > 0 && (
+      <p class="credits">
+        Fotos de Wikimedia Commons: {credits.map((c) => `${c.file} — ${c.author} (${c.license})`).join('; ')}.
+      </p>
+    )}
+    <p class="credits">© {year} {site.name}. Horarios aproximados, pueden ajustarse el día del viaje.</p>
+  </div>
+</footer>
+
+<style>
+  .ft { background: var(--ink); color: #fff; }
+  .in { padding-block: 80px 56px; display: flex; flex-direction: column; align-items: center; gap: 22px; text-align: center; }
+  .word { display: block; width: 260px; max-width: 100%; aspect-ratio: 900 / 268; color: #fff; }
+  .icons { display: flex; gap: 22px; opacity: 0.7; }
+  .icons svg { width: 20px; height: 20px; }
+  .links { display: flex; gap: 24px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; }
+  .links a { text-decoration: none; opacity: 0.8; }
+  .links a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
+  .credits { font-size: 11px; color: rgba(255, 255, 255, 0.5); max-width: 90ch; line-height: 1.7; }
+</style>

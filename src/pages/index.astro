@@ -1,0 +1,233 @@
+---
+import { url } from '../lib/url';
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import TripCard from '../components/TripCard.astro';
+import Nosotros from '../components/Nosotros.astro';
+import Countdown from '../components/islands/Countdown.tsx';
+import mandala from '../assets/brand/mandala.png';
+import { getViajes, departure, arrivalHome, longDate } from '../lib/viajes';
+import { site, whatsappLink } from '../config/site';
+import { fotosViajes } from '../lib/fotos';
+
+const { proximos, pasados, all } = await getViajes();
+const next = proximos[0] ?? all.at(-1);
+const slides = [
+  ...(next ? [{ src: next.data.cover, alt: next.data.coverAlt, note: `${next.data.title} & ${next.data.titleAccent}`, pos: 'center 40%' }] : []),
+  ...fotosViajes,
+];
+const slideUrls = await Promise.all(
+  slides.map(async (s) => (await getImage({ src: s.src, width: Math.min(2400, s.src.width), format: 'webp', quality: 90 })).src),
+);
+const pad = (n: number) => String(n).padStart(2, '0');
+const wa = whatsappLink('Hola, quiero info de los próximos viajes');
+---
+<Base>
+  <header class="hero on-dark">
+    {slides.map((s, i) => (
+      <div
+        class:list={['photo', { on: i === 0 }]}
+        style={`background-position:${s.pos}${i === 0 ? `;background-image:url(${slideUrls[i]})` : ''}`}
+        data-bg={i === 0 ? undefined : slideUrls[i]}
+        data-wide={s.src.width > s.src.height ? '' : undefined}
+        role="img"
+        aria-label={s.alt}
+        aria-hidden={i === 0 ? undefined : 'true'}
+      ></div>
+    ))}
+    <div class="in">
+      <nav class="top" aria-label="Principal">
+        <span class="label">Salidas desde {site.origins.join(' · ')}</span>
+        <div class="links"><a href={url('/viajes/')}>Viajes</a>{wa && <a href={wa} target="_blank" rel="noopener">Contacto</a>}</div>
+      </nav>
+      <div class="brand">
+        <span class="logo mandala" style={`--src:url(${mandala.src})`} role="img" aria-label={site.name}></span>
+        <h1>{site.tagline.split(' ').slice(0, 3).join(' ')} <em>{site.tagline.split(' ').slice(3).join(' ')}</em></h1>
+      </div>
+      {slides.length > 1 && (
+        <div class="reel">
+          <span class="label count"><b data-n>01</b> / <span data-total>{pad(slides.length)}</span></span>
+          <div class="ticks">
+            {slides.map((s, i) => (
+              <button type="button" class:list={['tick', { on: i === 0 }]} data-note={s.note} aria-label={`Foto ${i + 1}: ${s.note}`} aria-current={i === 0 ? 'true' : undefined}><i></i></button>
+            ))}
+          </div>
+          <span class="label cap" data-cap>{slides[0].note}</span>
+        </div>
+      )}
+      {next && (
+        <a class="next" href={url(`/viajes/${next.id}/`)}>
+          <div>
+            <span class="label">Próximo viaje · {longDate(next.data.date)}</span>
+            <b>{next.data.title} <em>&amp; {next.data.titleAccent}</em></b>
+          </div>
+          <Countdown client:load departAt={departure(next)} endAt={arrivalHome(next)} />
+        </a>
+      )}
+    </div>
+  </header>
+
+  <Nosotros />
+
+  <section class="sec">
+    <div class="in">
+      <div class="sec-head">
+        <span class="label">Agenda</span>
+        <h2>Próximos <em>viajes</em></h2>
+      </div>
+      {proximos.length > 0 ? (
+        <div class="grid">{proximos.map((v, i) => <TripCard viaje={v} index={i} />)}</div>
+      ) : (
+        <p class="empty">Estamos armando el siguiente viaje. Vuelve pronto.</p>
+      )}
+    </div>
+  </section>
+
+  {pasados.length > 0 && (
+    <section class="sec alt">
+      <div class="in">
+        <div class="sec-head">
+          <span class="label">Bitácora</span>
+          <h2>Viajes <em>anteriores</em></h2>
+        </div>
+        <div class="grid">{pasados.map((v, i) => <TripCard viaje={v} index={i} past />)}</div>
+      </div>
+    </section>
+  )}
+
+  {wa && (
+    <section class="band on-dark">
+      <div class="in">
+        <h2>¿Te apuntas <em>al siguiente?</em></h2>
+        <a class="btn solid" href={wa} target="_blank" rel="noopener">Escríbenos por WhatsApp</a>
+      </div>
+    </section>
+  )}
+</Base>
+
+<script>
+  // Carrusel de la portada: cambia de foto cada 6 s; las fotos se cargan una antes de mostrarse.
+  const hero = document.querySelector<HTMLElement>('.hero');
+  const photos = hero ? [...hero.querySelectorAll<HTMLElement>('.photo')] : [];
+  const ticks = hero ? [...hero.querySelectorAll<HTMLButtonElement>('.tick')] : [];
+  if (photos.length > 1 && ticks.length === photos.length) {
+    const num = hero!.querySelector('[data-n]')!;
+    const total = hero!.querySelector('[data-total]')!;
+    const cap = hero!.querySelector('[data-cap]')!;
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // En pantallas anchas solo rotan las fotos horizontales: las verticales se estirarían y perderían nitidez.
+    const wide = matchMedia('(min-width: 761px) and (min-aspect-ratio: 1/1)');
+    const DUR = 6000;
+    const pad = (n: number) => String(n).padStart(2, '0');
+    let cur = 0;
+    let pool: number[] = [];
+    let timer: number | undefined;
+
+    const load = (k: number) => {
+      const el = photos[k];
+      if (el.dataset.bg) {
+        el.style.backgroundImage = `url(${el.dataset.bg})`;
+        delete el.dataset.bg;
+      }
+    };
+    const after = (k: number) => pool[(pool.indexOf(k) + 1) % pool.length];
+    const schedule = () => {
+      clearTimeout(timer);
+      if (!still && !document.hidden && pool.length > 1) timer = window.setTimeout(() => go(after(cur)), DUR);
+    };
+    const go = (k: number) => {
+      photos[cur].classList.remove('on');
+      photos[cur].setAttribute('aria-hidden', 'true');
+      ticks[cur].classList.remove('on');
+      ticks[cur].removeAttribute('aria-current');
+      cur = k;
+      load(cur);
+      load(after(cur));
+      photos[cur].classList.add('on');
+      photos[cur].removeAttribute('aria-hidden');
+      ticks[cur].classList.add('on');
+      ticks[cur].setAttribute('aria-current', 'true');
+      num.textContent = pad(pool.indexOf(cur) + 1);
+      cap.textContent = ticks[cur].dataset.note ?? '';
+      schedule();
+    };
+    const setPool = () => {
+      pool = photos.map((_, k) => k).filter((k) => !wide.matches || photos[k].hasAttribute('data-wide'));
+      if (!pool.length) pool = photos.map((_, k) => k);
+      ticks.forEach((t, k) => (t.hidden = !pool.includes(k)));
+      total.textContent = pad(pool.length);
+      go(pool.includes(cur) ? cur : pool[0]);
+    };
+
+    ticks.forEach((t, k) => t.addEventListener('click', () => k !== cur && go(k)));
+    document.addEventListener('visibilitychange', schedule);
+    wide.addEventListener('change', setPool);
+    setPool();
+  }
+</script>
+
+<style>
+  .hero { position: relative; color: #fff; isolation: isolate; overflow: hidden; background: #2a3540; }
+  /* Carrusel de fondo: fundido + acercamiento lento. Al salir, la foto se queda quieta mientras se desvanece. */
+  .photo {
+    position: absolute; inset: 0; z-index: -2; background-size: cover; background-repeat: no-repeat;
+    opacity: 0; transform: scale(1.06);
+    transition: opacity 1.4s ease, transform 0s 1.4s;
+  }
+  .photo.on { opacity: 1; transform: scale(1); transition: opacity 1.4s ease, transform 9s ease-out; }
+  .hero::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(10,14,20,.55) 0%, rgba(10,14,20,.15) 45%, rgba(10,14,20,.85) 100%); }
+  .hero .in { min-height: min(820px, 100vh); padding-block: 28px 40px; display: grid; grid-template-rows: auto 1fr auto auto; gap: 32px; }
+
+  .reel { display: flex; align-items: center; gap: 16px; margin-bottom: -12px; }
+  .reel .count { opacity: 0.85; font-variant-numeric: tabular-nums; }
+  .reel .count b { font-weight: 400; }
+  .reel .cap { min-width: 0; opacity: 0.75; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ticks { display: flex; }
+  .tick { all: unset; cursor: pointer; display: grid; place-items: center; width: 30px; height: 20px; }
+  .tick i { position: relative; display: block; width: 22px; height: 1px; background: rgba(255,255,255,.35); overflow: hidden; }
+  .tick i::after { content: ''; position: absolute; inset: 0; background: #fff; transform: scaleX(0); transform-origin: left; }
+  .tick:hover i { background: rgba(255,255,255,.7); }
+  .tick.on i::after { transform: scaleX(1); animation: fill 6s linear; }
+  .tick:focus-visible { outline: 1px solid #fff; outline-offset: 2px; }
+  @keyframes fill { from { transform: scaleX(0); } }
+  .top { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .top .label { opacity: 0.85; }
+  .links { display: flex; gap: 24px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; }
+  .links a { text-decoration: none; }
+  .links a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .brand { align-self: center; display: flex; flex-direction: column; gap: 32px; align-items: flex-start; }
+  .mandala { display: block; width: min(340px, 70vw); aspect-ratio: 456 / 290; color: #fff; }
+  h1 { font-family: var(--serif); font-size: clamp(44px, 7vw, 96px); line-height: 0.95; letter-spacing: -0.02em; max-width: 14ch; }
+  h1 em { color: var(--gold); }
+  .next { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,.3); padding-top: 20px; text-decoration: none; }
+  .next > div { display: flex; flex-direction: column; gap: 6px; }
+  .next .label { opacity: 0.75; }
+  .next b { font-family: var(--serif); font-weight: 400; font-size: clamp(30px, 4vw, 44px); line-height: 1; }
+  .next:hover b { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; }
+  .next :global(.cd) { display: flex; align-items: flex-end; }
+  .next :global(.cd .u) { display: flex; flex-direction: column; align-items: center; padding: 0 14px; border-left: 1px solid rgba(255,255,255,.3); }
+  .next :global(.cd .u:first-child) { border-left: 0; padding-left: 0; }
+  .next :global(.cd .u b) { font-family: var(--serif); font-weight: 400; font-size: 40px; line-height: 1; font-variant-numeric: tabular-nums; }
+  .next :global(.cd .u span) { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.7; }
+  .next :global(.cd-msg) { font-size: 15px; }
+
+  .sec .in { padding-block: 104px; display: flex; flex-direction: column; gap: 48px; }
+  .sec.alt { background: var(--sage); color: var(--sage-ink); }
+  .sec-head { display: flex; flex-direction: column; gap: 10px; border-top: 1px solid currentColor; padding-top: 16px; }
+  .sec-head .label { opacity: 0.7; }
+  .sec-head h2, .band h2 { font-family: var(--serif); font-size: clamp(42px, 6vw, 80px); line-height: 0.98; letter-spacing: -0.015em; }
+  .sec-head h2 em, .band h2 em { opacity: 0.75; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: 56px 40px; }
+  .empty { font-size: 18px; font-weight: 300; }
+  .band { background: var(--night); color: #fff; }
+  .band .in { padding-block: 96px; display: flex; justify-content: space-between; align-items: center; gap: 32px; flex-wrap: wrap; }
+
+  @media (max-width: 560px) {
+    .sec .in { padding-block: 72px; }
+    .next :global(.cd .u) { padding: 0 10px; }
+    .next :global(.cd .u b) { font-size: 32px; }
+    .reel { gap: 10px; }
+    .tick { width: 22px; }
+    .tick i { width: 16px; }
+  }
+</style>
