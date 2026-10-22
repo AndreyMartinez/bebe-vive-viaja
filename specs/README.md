@@ -48,4 +48,5 @@ Ver [`CLAUDE.md`](../CLAUDE.md): Astro estático con islas de React solo para in
 | Spec | Estado |
 | ---- | ------ |
 | [redes-sociales](redes-sociales/requirements.md) | Implementada (falta ID de Behold para Instagram) |
+| [audioguias](audioguias/requirements.md) | Implementada (Tepoztlán: 7 audioguías) |
 | _(siguiente candidata: fase 2, registro de viajeros)_ | |
