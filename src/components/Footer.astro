@@ -1,7 +1,7 @@
 ---
 import { url } from '../lib/url';
 import wordmark from '../assets/brand/wordmark.png';
-import { site, whatsappLink } from '../config/site';
+import { site, socials, whatsappLink } from '../config/site';
 
 interface Props {
   credits?: { file: string; author: string; license: string }[];
@@ -23,7 +23,7 @@ const year = new Date().getFullYear();
     <nav class="links" aria-label="Pie de página">
       <a href={url('/viajes/')}>Viajes</a>
       {wa && <a href={wa} target="_blank" rel="noopener">WhatsApp</a>}
-      {site.instagram && <a href={`https://instagram.com/${site.instagram}`} target="_blank" rel="noopener">Instagram</a>}
+      {socials.map((s) => <a href={s.href} target="_blank" rel="noopener">{s.name}</a>)}
     </nav>
     {credits.length > 0 && (
       <p class="credits">
@@ -40,7 +40,7 @@ const year = new Date().getFullYear();
   .word { display: block; width: 260px; max-width: 100%; aspect-ratio: 900 / 268; color: #fff; }
   .icons { display: flex; gap: 22px; opacity: 0.7; }
   .icons svg { width: 20px; height: 20px; }
-  .links { display: flex; gap: 24px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; }
+  .links { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 24px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; }
   .links a { text-decoration: none; opacity: 0.8; }
   .links a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
   .credits { font-size: 11px; color: rgba(255, 255, 255, 0.5); max-width: 90ch; line-height: 1.7; }

@@ -18,9 +18,22 @@
   --night: #0f1226;
   --gold: #c9a46a;
 
+  /* Marca (logo y piezas para viajeros, p. ej. políticas de cancelación). Ver .claude/skills/paleta-marca */
+  --black: #000000;
+  --sand: #f6f1e8;
+  --sand-line: #e4dccd;
+  --wine: #8c1c2b;
+  --wine-bright: #c0394b;
+  --wine-soft: #f7e9ea;
+  --wine-line: #e9c9cd;
+  --leaf: #33772d;
+  --leaf-soft: #ebf4e6;
+  --leaf-line: #cfe4c6;
+
   --serif: 'Instrument Serif', 'Times New Roman', Georgia, serif;
   --sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: 'Geist Mono', ui-monospace, Menlo, monospace;
+  --brush: 'Kaushan Script', 'Brush Script MT', cursive;
 
   --gutter: max(20px, env(safe-area-inset-left, 0px));
   --gutter-r: max(20px, env(safe-area-inset-right, 0px));

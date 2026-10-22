@@ -4,6 +4,7 @@ import { getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import TripCard from '../components/TripCard.astro';
 import Nosotros from '../components/Nosotros.astro';
+import Siguenos from '../components/Siguenos.astro';
 import Countdown from '../components/islands/Countdown.tsx';
 import mandala from '../assets/brand/mandala.png';
 import { getViajes, departure, arrivalHome, longDate } from '../lib/viajes';
@@ -94,6 +95,8 @@ const wa = whatsappLink('Hola, quiero info de los próximos viajes');
       </div>
     </section>
   )}
+
+  <Siguenos />
 
   {wa && (
     <section class="band on-dark">

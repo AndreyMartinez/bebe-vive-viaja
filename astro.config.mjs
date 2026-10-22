@@ -10,6 +10,6 @@ export default defineConfig({
   base: process.env.BASE_PATH || '/',
   output: 'static',
   trailingSlash: 'always',
-  integrations: [react(), sitemap()],
+  integrations: [react(), sitemap({ filter: (page) => !page.includes('/politicas-de-cancelacion/') })],
   image: { responsiveStyles: false },
 });
