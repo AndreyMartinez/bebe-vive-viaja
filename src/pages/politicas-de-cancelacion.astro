@@ -1,0 +1,230 @@
+---
+// Página independiente (sin menú ni pie del sitio): se comparte por WhatsApp después de que el viajero paga su apartado.
+// No se indexa ni entra al sitemap. Su versión imprimible es public/politicas-de-cancelacion.pdf.
+import '../styles/global.css';
+import { url } from '../lib/url';
+import { site } from '../config/site';
+import mandala from '../assets/brand/mandala.png';
+import wordmark from '../assets/brand/wordmark.png';
+
+const title = `Políticas de cancelación · ${site.name}`;
+const description = 'Condiciones de cancelación del apartado de tu viaje con Bebe, Vive, Viaja.';
+---
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
+    <meta name="theme-color" content="#000000" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Geist:wght@300..800&family=Geist+Mono:wght@400;500&display=swap"
+    />
+  </head>
+  <body class="pc">
+    <header class="hero on-dark">
+      <span class="logo wm" style={`--src:url(${mandala.src})`} aria-hidden="true"></span>
+      <img class="brand" src={mandala.src} width={mandala.width} height={mandala.height} alt={site.name} />
+      <p class="emo" aria-hidden="true">✈️ 🐵 🌿 🍷</p>
+      <p class="kicker label">Políticas de</p>
+      <h1 class="brush">Cancelación</h1>
+    </header>
+
+    <main class="body">
+      <p class="lead"><b>¡Gracias por tu apartado!</b><br />Te compartimos nuestras políticas de cancelación.</p>
+
+      <section class="pill" aria-label="Importante">
+        <span class="pill-e" aria-hidden="true">✈️</span>
+        <div>
+          <span class="label k">Importante</span>
+          <p class="v">El apartado es <span class="brush">por persona</span></p>
+        </div>
+        <div class="ticket" aria-hidden="true"><b class="brush">1 = 1</b>apartado<br />por viajero</div>
+      </section>
+
+      <div class="divider"><span class="label">¿Quién cancela?</span></div>
+
+      <div class="grid">
+        <section class="card client">
+          <span class="logo card-wm" style={`--src:url(${mandala.src})`} aria-hidden="true"></span>
+          <div class="head"><span class="e" aria-hidden="true">🍷</span><span class="label who">Si cancelas tú</span></div>
+          <h2>Cancelación por parte <span class="brush">del cliente</span></h2>
+          <ul class="rules">
+            <li><span class="mark" aria-hidden="true">✕</span><span><b>No aplica reembolso</b> del apartado.</span></li>
+            <li><span class="mark" aria-hidden="true">✕</span><span><b>No es transferible</b> a acompañantes.</span></li>
+            <li><span class="mark" aria-hidden="true">✕</span><span><b>No puede utilizarse</b> para otros tours.</span></li>
+          </ul>
+        </section>
+
+        <section class="card company">
+          <span class="logo card-wm" style={`--src:url(${mandala.src})`} aria-hidden="true"></span>
+          <div class="head"><span class="e" aria-hidden="true">🌿</span><span class="label who">Si cancelamos nosotros</span></div>
+          <h2>Cancelación por parte <span class="brush">de la empresa</span></h2>
+          <div class="big">
+            <p class="num">100<small>%</small></p>
+            <p class="brush lbl">de reembolso</p>
+            <p class="sub">del monto pagado</p>
+          </div>
+          <p class="check"><span class="mark" aria-hidden="true">✓</span><span>Te devolvemos <b>todo</b> lo que pagaste.</span></p>
+        </section>
+      </div>
+
+      <p class="note"><span class="e" aria-hidden="true">🐵</span><span>Las condiciones de cancelación por parte del cliente aplican <b>sin excepción</b>.</span></p>
+
+      <a class="btn solid dl" href={url('/politicas-de-cancelacion.pdf')} download>Descargar PDF</a>
+    </main>
+
+    <footer class="foot">
+      <a href={url('/')} aria-label={`${site.name}, inicio`}><span class="logo word" style={`--src:url(${wordmark.src})`}></span></a>
+      <span class="emo-s" aria-hidden="true">✈️🐵🌿🍷</span>
+      <a class="ig" href={`https://www.instagram.com/${site.instagram}/`} target="_blank" rel="noopener">@{site.instagram}</a>
+    </footer>
+  </body>
+</html>
+
+<style>
+  /* Paleta de marca: ver .claude/skills/paleta-marca. Vino = lo que pierde el cliente, hoja = lo que recibe. */
+  .pc { background: var(--sand); color: var(--ink); }
+  .brush { font-family: var(--brush); font-weight: 400; }
+
+  /* ---------- Portada ---------- */
+  .hero {
+    position: relative; overflow: hidden; text-align: center;
+    background: var(--black); color: var(--white);
+    padding: 40px var(--gutter) 56px;
+  }
+  .wm {
+    position: absolute; left: 50%; top: -12%; transform: translateX(-50%);
+    width: min(140%, 900px); aspect-ratio: 456 / 290; color: var(--white); opacity: 0.07;
+  }
+  /* <img> invertido en vez de máscara: los visores de PDF (Vista Previa) pintan mal la máscara en grande */
+  .brand { position: relative; display: block; margin: 0 auto; width: min(62vw, 260px); height: auto; filter: invert(1); }
+  .emo { position: relative; margin-top: 6px; font-size: 18px; letter-spacing: 0.4em; padding-left: 0.4em; }
+  .kicker {
+    position: relative; margin-top: 18px;
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: 12px; letter-spacing: 0.5em; padding-left: 0.5em;
+  }
+  .kicker::before, .kicker::after { content: ''; width: 48px; height: 1px; background: rgba(255, 255, 255, 0.5); }
+  h1 { position: relative; font-family: var(--brush); font-size: clamp(56px, 12vw, 96px); line-height: 1.05; }
+
+  /* ---------- Contenido ---------- */
+  .body { max-width: 820px; margin: 0 auto; padding: 36px var(--gutter) 48px; display: flex; flex-direction: column; }
+  .lead { text-align: center; color: var(--ink-2); font-size: 16px; line-height: 1.5; }
+  .lead b { color: var(--ink); font-weight: 600; }
+
+  .pill {
+    margin-top: 24px; display: flex; align-items: center; gap: 20px;
+    background: var(--white); border: 1.5px solid var(--black); border-radius: 18px;
+    padding: 16px 24px; box-shadow: 8px 8px 0 var(--black);
+  }
+  .pill-e { font-size: 34px; line-height: 1; }
+  .k { color: var(--ink-2); }
+  .v { font-size: clamp(19px, 3.6vw, 24px); font-weight: 700; line-height: 1.25; }
+  .v .brush { font-size: 1.3em; color: var(--wine); }
+  .ticket {
+    margin-left: auto; text-align: center; border-left: 2px dashed var(--sand-line); padding-left: 20px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); line-height: 1.4;
+  }
+  .ticket b { display: block; font-size: 34px; color: var(--ink); line-height: 1.1; letter-spacing: 0; text-transform: none; }
+
+  .divider { display: flex; align-items: center; gap: 16px; margin: 36px 0 18px; color: var(--ink-2); }
+  .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--sand-line); }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .card { position: relative; overflow: hidden; border-radius: 18px; padding: 22px; }
+  .card > * { position: relative; }
+  .client { background: var(--wine-soft); border: 1.5px solid var(--wine-line); }
+  .company { background: var(--leaf-soft); border: 1.5px solid var(--leaf-line); }
+  .card-wm { position: absolute; width: 220px; aspect-ratio: 456 / 290; right: -64px; top: -24px; color: var(--black); opacity: 0.06; }
+  .head { display: flex; align-items: center; gap: 12px; }
+  .head .e { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-size: 20px; background: var(--white); }
+  .who { font-weight: 500; }
+  .client .who, .client h2 .brush, .client b { color: var(--wine); }
+  .company .who, .company h2 .brush, .company b, .company .num { color: var(--leaf); }
+  h2 { margin: 16px 0 18px; font-size: 19px; font-weight: 700; line-height: 1.2; }
+  h2 .brush { display: block; font-size: 1.4em; line-height: 1.2; }
+
+  .rules { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .rules li, .check {
+    display: flex; gap: 12px; align-items: center;
+    background: var(--white); border-radius: 12px; padding: 12px 14px; font-size: 15px; line-height: 1.4;
+  }
+  .rules b, .check b { font-weight: 600; }
+  .mark {
+    flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center;
+    color: var(--white); font-size: 13px; font-weight: 700; line-height: 1;
+  }
+  .client .mark { background: var(--wine); }
+  .company .mark { background: var(--leaf); }
+
+  .big { background: var(--white); border-radius: 12px; text-align: center; padding: 16px; }
+  .num { font-weight: 800; font-size: 76px; line-height: 1; letter-spacing: -0.03em; }
+  .num small { font-size: 0.5em; }
+  .lbl { font-size: 24px; margin-top: 4px; }
+  .sub { font-size: 13px; color: var(--ink-2); }
+  .check { margin-top: 12px; }
+
+  .note {
+    margin-top: 24px; display: flex; gap: 16px; align-items: center;
+    background: var(--black); color: var(--white); border-radius: 18px; padding: 18px 24px; font-size: 15px; line-height: 1.45;
+  }
+  .note .e { font-size: 28px; line-height: 1; }
+  .note b { border-bottom: 2px solid var(--wine-bright); font-weight: 600; }
+
+  .dl { align-self: center; margin-top: 32px; }
+
+  .foot {
+    max-width: 820px; margin: 0 auto; padding: 24px var(--gutter) 40px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    border-top: 1px solid var(--sand-line);
+  }
+  .word { display: block; width: 150px; aspect-ratio: 1242 / 370; color: var(--black); }
+  .emo-s { font-size: 16px; letter-spacing: 0.2em; }
+  .ig { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-decoration: none; font-weight: 500; }
+  .ig:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
+    .ticket { display: none; }
+    .pill { box-shadow: 6px 6px 0 var(--black); }
+    .foot { flex-direction: column; text-align: center; }
+  }
+
+  /* ---------- Impresión: una hoja A4, de aquí sale el PDF ---------- */
+  @media print {
+    @page { size: A4; margin: 0; }
+    html, body { width: 210mm; height: 297mm; overflow: hidden; }
+    .pc { -webkit-print-color-adjust: exact; print-color-adjust: exact; position: relative; }
+    .hero { padding: 7mm 18mm 7mm; }
+    .wm { display: none; } /* la opacidad sobre máscara se rasteriza mal en algunos visores de PDF */
+    .brand { width: 64mm; }
+    .emo { font-size: 13pt; }
+    h1 { font-size: 40pt; }
+    .body { max-width: none; padding: 5mm 18mm 0; }
+    .body { padding-top: 4mm; }
+    .lead { font-size: 10.5pt; }
+    .pill { margin-top: 4mm; padding: 4mm 7mm; box-shadow: 2.2mm 2.2mm 0 var(--black); }
+    .ticket { display: block; }
+    .divider { margin: 6mm 0 4mm; }
+    .grid { grid-template-columns: 1fr 1fr; gap: 6mm; }
+    .card { padding: 6mm; }
+    h2 { font-size: 13.5pt; margin: 4mm 0 4.5mm; }
+    .rules li, .check { font-size: 9.6pt; padding: 3.2mm 3.6mm; }
+    .num { font-size: 50pt; }
+    .lbl { font-size: 16pt; }
+    .note { margin-top: 5mm; font-size: 9.6pt; padding: 4.5mm 6mm; }
+    .dl { display: none; }
+    .foot { position: absolute; left: 0; right: 0; bottom: 0; max-width: none; padding: 4mm 18mm; flex-direction: row; text-align: left; }
+  }
+</style>

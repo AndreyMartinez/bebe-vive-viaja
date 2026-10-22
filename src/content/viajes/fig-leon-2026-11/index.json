@@ -1,0 +1,157 @@
+{
+  "title": "Festival del Globo",
+  "titleAccent": "León",
+  "subtitle": "Un fin de semana en Guanajuato",
+  "summary": "Cientos de globos despegando al amanecer, el Centro Histórico de León, la Noche Mágica con los globos encendidos y el concierto de Calvin Harris, Alok y Tyson O’Brien.",
+  "date": "2026-11-13",
+  "start": "22:00",
+  "end": "06:00",
+  "utcOffset": "-06:00",
+  "region": "León, Guanajuato",
+  "origins": ["Jocotitlán", "Ixtlahuaca", "Toluca", "CDMX"],
+  "status": "borrador",
+  "cover": "../../../assets/nosotros/amanecer.jpg",
+  "coverAlt": "Amanecer en carretera rumbo al Festival Internacional del Globo",
+  "sunset": "18:00",
+  "chapters": [
+    {
+      "id": "salida",
+      "start": "22:00",
+      "end": "05:30",
+      "kicker": "Viernes 13",
+      "theme": "night",
+      "tocLabel": "La salida",
+      "heading": "Nos vamos",
+      "headingEm": "de noche",
+      "lead": "Salimos el viernes a las 22:00 y vamos recogiendo al grupo en cada punto de abordaje. Viajamos de noche para llegar a León antes de que salga el sol. Duerme en el camión: el sábado es largo.",
+      "tags": [
+        { "text": "Desviación de Joco" },
+        { "text": "Ixtlahuaca" },
+        { "text": "Patio Toluca" },
+        { "text": "El Yaqui" },
+        { "text": "Metro San Antonio" },
+        { "text": "Walmart Toreo" },
+        { "text": "Hora de cada punto por confirmar", "tbd": true }
+      ],
+      "facts": [
+        { "label": "A bordo", "text": "Seguro de viajero incluido y coordinador de viaje durante toda la experiencia." },
+        { "label": "Para dormir", "text": "Lleva almohada de viaje y una cobija ligera. En la madrugada el camión refresca." }
+      ]
+    },
+    {
+      "id": "amanecer",
+      "start": "05:30",
+      "end": "10:30",
+      "kicker": "Sábado 14",
+      "theme": "mist",
+      "tocLabel": "Los globos",
+      "heading": "Despierta",
+      "headingEm": "entre globos",
+      "lead": "Llegamos al Parque Metropolitano de León con tu Day Pass. Con la primera luz se inflan los globos y despegan casi al mismo tiempo: cientos de colores llenando el cielo. Te buscamos para tomarte fotos y video, que ya vienen incluidos.",
+      "tags": [
+        { "text": "Day Pass incluido" },
+        { "text": "Fotos y video incluidos" },
+        { "text": "Hora de llegada por confirmar", "tbd": true }
+      ],
+      "stats": [
+        { "value": "07:00", "label": "Sale el sol, aprox." },
+        { "value": "06:30", "label": "Llega para verlo" }
+      ],
+      "facts": [
+        { "label": "1783", "text": "Los hermanos Montgolfier hicieron volar en París el primer globo de aire caliente con personas a bordo." },
+        { "label": "Desde 2002", "text": "El FIG nació en León en 2002 y hoy es de los festivales de globos más grandes del mundo." },
+        { "label": "Por qué tan temprano", "text": "Los globos vuelan con el aire frío y quieto del amanecer. Más tarde el viento y el calor lo complican." }
+      ]
+    },
+    {
+      "id": "centro",
+      "start": "11:00",
+      "end": "16:30",
+      "kicker": "Tarde",
+      "theme": "sage",
+      "tocLabel": "León",
+      "heading": "León,",
+      "headingEm": "a pie",
+      "lead": "Traslado al Centro Histórico. Te damos la guía digital del destino y la tarde es tuya: come, camina y descansa antes de la noche. Alimentos por tu cuenta.",
+      "tags": [
+        { "text": "Traslado incluido" },
+        { "text": "Guía digital" },
+        { "text": "Hora de regreso al parque por confirmar", "tbd": true }
+      ],
+      "facts": [
+        { "label": "1576", "text": "Año de fundación de la Villa de León. Hoy es la ciudad más grande de Guanajuato." },
+        { "label": "Arco de la Calzada", "text": "La puerta de entrada al centro y la foto obligada de León." },
+        { "label": "Para comer", "text": "Pide una guacamaya: bolillo con chicharrón, salsa y limón. Es la torta típica de la ciudad." },
+        { "label": "Capital del calzado", "text": "Si quieres botas, tenis o chamarra de piel, la Zona Piel está a unos minutos." }
+      ]
+    },
+    {
+      "id": "noche-magica",
+      "start": "18:00",
+      "end": "20:30",
+      "kicker": "Al caer el sol",
+      "theme": "dusk",
+      "tocLabel": "Noche Mágica",
+      "heading": "Noche",
+      "headingEm": "Mágica",
+      "lead": "De vuelta en el parque. Cuando oscurece, los globos se quedan en tierra y se encienden con sus quemadores al ritmo de la música. Es el momento más fotogénico del festival.",
+      "tags": [{ "text": "Acceso a la Noche Mágica" }, { "text": "Rifa sorpresa" }],
+      "stats": [
+        { "value": "18:00", "label": "Se pone el sol, aprox." }
+      ]
+    },
+    {
+      "id": "concierto",
+      "start": "20:30",
+      "end": "23:59",
+      "kicker": "Concierto",
+      "theme": "night",
+      "tocLabel": "El concierto",
+      "heading": "Calvin Harris,",
+      "headingEm": "Alok y Tyson O’Brien",
+      "lead": "Cerramos el día cantando y bailando en el escenario del festival. Al terminar nos reunimos todos en el punto que te indique el coordinador.",
+      "tags": [
+        { "text": "Concierto incluido" },
+        { "text": "Horario del escenario por confirmar", "tbd": true },
+        { "text": "Punto de reunión por confirmar", "tbd": true }
+      ],
+      "facts": [
+        { "label": "No incluye", "text": "Accesos VIP no mencionados, alimentos, bebidas ni propinas." }
+      ]
+    },
+    {
+      "id": "regreso",
+      "start": "00:30",
+      "end": "06:00",
+      "kicker": "Domingo 15",
+      "theme": "night",
+      "tocLabel": "El regreso",
+      "heading": "De vuelta",
+      "headingEm": "a casa",
+      "lead": "Salimos de León de madrugada y dejamos a cada quien en su punto de abordaje. Llegada aproximada a las 6:00 del domingo.",
+      "compact": true
+    }
+  ],
+  "checklist": [
+    { "text": "Identificación oficial" },
+    { "text": "Chamarra abrigadora", "hint": "Al amanecer y en la noche hace frío" },
+    { "text": "Tenis cómodos", "hint": "Se camina mucho en el parque" },
+    { "text": "Almohada de viaje y cobija ligera", "hint": "Para las dos noches en camión" },
+    { "text": "Batería portátil", "hint": "Son casi 24 horas fuera" },
+    { "text": "Efectivo y tarjeta", "hint": "Comida y bebidas van por tu cuenta" },
+    { "text": "Protector solar y gorra" },
+    { "text": "Cangurera o bolsa pequeña", "hint": "En el concierto hay mucha gente" }
+  ],
+  "quickFacts": [
+    { "label": "Fechas", "value": "Viernes 13 al domingo 15 de noviembre de 2026" },
+    { "label": "Salida", "value": "Viernes 22:00" },
+    { "label": "Regreso", "value": "Domingo 06:00 aprox." },
+    { "label": "Abordaje", "value": "Desviación de Joco · Ixtlahuaca · Patio Toluca · El Yaqui · Metro San Antonio · Walmart Toreo" },
+    { "label": "Precio", "value": "$2,280 MXN por persona" },
+    { "label": "Aparta", "value": "Con $800 MXN" },
+    { "label": "Pagos", "value": "Transferencia, efectivo o tarjeta de crédito a meses sin intereses" },
+    { "label": "Incluye", "value": "Transporte redondo, seguro de viajero, Day Pass al FIG, despegue al amanecer, Noche Mágica, concierto, Centro Histórico, traslados internos, guía digital, coordinador, fotos y video, rifa sorpresa" },
+    { "label": "No incluye", "value": "Alimentos, bebidas, propinas y accesos VIP no mencionados" }
+  ],
+  "credits": []
+}

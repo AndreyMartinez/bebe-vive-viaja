@@ -47,4 +47,5 @@ Ver [`CLAUDE.md`](../CLAUDE.md): Astro estático con islas de React solo para in
 
 | Spec | Estado |
 | ---- | ------ |
-| _(ninguna todavía; la siguiente candidata es la fase 2: registro de viajeros)_ | |
+| [redes-sociales](redes-sociales/requirements.md) | Implementada (falta ID de Behold para Instagram) |
+| _(siguiente candidata: fase 2, registro de viajeros)_ | |

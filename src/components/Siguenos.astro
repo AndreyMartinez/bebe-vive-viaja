@@ -1,0 +1,142 @@
+---
+/** Sección "Síguenos": perfiles embebidos de Instagram, TikTok y Facebook (spec: specs/redes-sociales/). */
+import { site, socials } from '../config/site';
+import mandala from '../assets/brand/mandala.png';
+
+const href = Object.fromEntries(socials.map((s) => [s.name, s.href]));
+const fbPlugin = `https://www.facebook.com/plugins/page.php?${new URLSearchParams({
+  href: `https://www.facebook.com/${site.facebook}`,
+  tabs: 'timeline',
+  width: '500',
+  height: '560',
+  small_header: 'false',
+  adapt_container_width: 'true',
+  hide_cover: 'false',
+  show_facepile: 'false',
+})}`;
+---
+<section class="sig" id="siguenos" aria-labelledby="siguenos-t">
+  <div class="in">
+    <div class="head">
+      <div>
+        <span class="label">Comunidad</span>
+        <h2 id="siguenos-t">Síguenos <em>en el camino</em></h2>
+      </div>
+      <p>Fotos del grupo, reels de cada viaje y las fechas nuevas antes que nadie. Elige tu red favorita.</p>
+    </div>
+
+    <div class="cols">
+      {site.instagram && (
+        <div class="col">
+          <div class="top"><span class="label">01 · Instagram</span><a class="label" href={href.Instagram} target="_blank" rel="noopener">Abrir ↗</a></div>
+          <div class="embed" data-embed={site.instagramFeedId ? 'instagram' : undefined}>
+            {site.instagramFeedId ? (
+              <behold-widget feed-id={site.instagramFeedId}></behold-widget>
+            ) : (
+              <div class="card">
+                <span class="avatar logo" style={`--src:url(${mandala.src})`} aria-hidden="true"></span>
+                <b>@{site.instagram}</b>
+                <span>{site.name}</span>
+                <a class="btn solid" href={href.Instagram} target="_blank" rel="noopener">Seguir en Instagram</a>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {site.tiktok && (
+        <div class="col">
+          <div class="top"><span class="label">02 · TikTok</span><a class="label" href={href.TikTok} target="_blank" rel="noopener">Abrir ↗</a></div>
+          <div class="embed" data-embed="tiktok">
+            <blockquote class="tiktok-embed" cite={href.TikTok} data-unique-id={site.tiktok} data-embed-type="creator">
+              <section><a href={href.TikTok} target="_blank" rel="noopener">@{site.tiktok} en TikTok</a></section>
+            </blockquote>
+          </div>
+        </div>
+      )}
+
+      {site.facebook && (
+        <div class="col">
+          <div class="top"><span class="label">03 · Facebook</span><a class="label" href={href.Facebook} target="_blank" rel="noopener">Abrir ↗</a></div>
+          <div class="embed" data-embed="facebook">
+            <iframe data-src={fbPlugin} title={`Página de Facebook de ${site.name}`} width="500" height="560" loading="lazy" allow="encrypted-media"></iframe>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<script>
+  // Carga los embeds de redes una sola vez, cuando la sección está por entrar en pantalla.
+  const section = document.getElementById('siguenos');
+  const addScript = (src: string, module = false) => {
+    if (document.querySelector(`script[src="${src}"]`)) return;
+    const s = document.createElement('script');
+    s.src = src;
+    s.async = true;
+    if (module) s.type = 'module';
+    document.body.append(s);
+  };
+  const load = () => {
+    section!.querySelectorAll<HTMLElement>('[data-embed]').forEach((el) => {
+      const kind = el.dataset.embed;
+      if (kind === 'tiktok') addScript('https://www.tiktok.com/embed.js');
+      if (kind === 'instagram') addScript('https://w.behold.so/widget.js', true);
+      if (kind === 'facebook') {
+        const frame = el.querySelector<HTMLIFrameElement>('iframe[data-src]');
+        if (frame) frame.src = frame.dataset.src!;
+      }
+    });
+  };
+  if (section) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          load();
+        }
+      },
+      { rootMargin: '400px 0px' },
+    );
+    io.observe(section);
+  }
+</script>
+
+<style>
+  .sig .in { padding-block: 104px; display: flex; flex-direction: column; gap: 56px; }
+  .head { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; align-items: end; border-top: 1px solid currentColor; padding-top: 16px; }
+  .head > div { display: flex; flex-direction: column; gap: 10px; }
+  .head .label { opacity: 0.7; }
+  h2 { font-family: var(--serif); font-size: clamp(42px, 6vw, 80px); line-height: 0.98; letter-spacing: -0.015em; }
+  h2 em { opacity: 0.75; }
+  .head p { font-size: 17px; font-weight: 300; max-width: 44ch; justify-self: end; }
+
+  .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; align-items: start; }
+  .col { display: flex; flex-direction: column; gap: 14px; min-width: 0; border-top: 1px solid currentColor; padding-top: 16px; }
+  .top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .top span { opacity: 0.7; }
+  .top a { text-decoration: none; padding-block: 8px; }
+  .top a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  .embed { min-height: 560px; max-width: 100%; overflow: hidden; background: var(--white); border: 1px solid var(--hair); display: flex; justify-content: center; }
+  .embed iframe { display: block; width: 100%; max-width: 500px; height: 560px; border: 0; }
+  .embed :global(.tiktok-embed) { margin: 0 !important; width: 100%; min-width: 0 !important; max-width: 100% !important; }
+  .embed blockquote { margin: 0; padding: 24px; align-self: center; text-align: center; font-family: var(--serif); font-size: 22px; }
+  .embed :global(behold-widget) { display: block; width: 100%; }
+
+  .card { align-self: center; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 32px 24px; text-align: center; }
+  .card .avatar { width: 112px; aspect-ratio: 456 / 290; color: var(--ink); margin-bottom: 12px; }
+  .card b { font-family: var(--serif); font-weight: 400; font-size: 32px; line-height: 1; }
+  .card span:not(.avatar) { font-size: 14px; color: var(--ink-2); }
+  .card .btn { margin-top: 16px; }
+
+  @media (max-width: 960px) {
+    .cols { grid-template-columns: minmax(0, 1fr); gap: 48px; }
+    .head { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    .head p { justify-self: start; }
+  }
+  @media (max-width: 560px) {
+    .sig .in { padding-block: 72px; }
+  }
+</style>

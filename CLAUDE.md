@@ -25,7 +25,7 @@ Sitio de la agencia de viajes en grupo **Bebe, Vive, Viaja** (salidas desde CDMX
 - La fecha/hora de los viajes es hora del centro de México (`utcOffset: "-06:00"`, sin horario de verano).
 
 ## Pendientes
-- `src/config/site.ts`: WhatsApp e Instagram reales; confirmar `tagline`.
+- `src/config/site.ts`: WhatsApp real; confirmar `tagline`. (Instagram, Facebook y TikTok ya están.)
 - Tepoztlán (24 oct 2026): puntos de abordaje, nombre del Skydive, terraza del convivio.
 - Fotos originales en alta resolución (las actuales vienen comprimidas de WhatsApp; las verticales no rotan en el carrusel de escritorio por eso).
 - Dominio final (`SITE_URL`; `robots.txt` ya se genera solo desde `src/pages/robots.txt.ts`).
