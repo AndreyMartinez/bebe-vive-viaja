@@ -2,13 +2,18 @@
 import type { Viaje } from '../lib/viajes';
 import Photo from './Photo.astro';
 import RailControls from './islands/RailControls.tsx';
+import AudioGuide from './islands/AudioGuide.tsx';
+import { guideAudio, guideId } from '../lib/audioguia';
 
 type Ch = Viaje['data']['chapters'][number];
 interface Props {
   ch: Ch;
   index: number;
+  /** Slug del viaje (carpeta de sus audioguías) y nombre para la pantalla de bloqueo. */
+  viaje: string;
+  trip: string;
 }
-const { ch, index } = Astro.props;
+const { ch, index, viaje, trip } = Astro.props;
 const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'][index] ?? String(index + 1);
 const dark = ch.theme === 'dusk' || ch.theme === 'night';
 const railId = `rail-${ch.id}`;
@@ -64,6 +69,11 @@ const railId = `rail-${ch.id}`;
         <blockquote class="story">
           <span class="label">{ch.quote.label}</span>
           <p>{ch.quote.text}</p>
+          {ch.quote.guide && (() => {
+            const id = `${ch.id}-leyenda`;
+            const audio = guideAudio(viaje, id, ch.quote.guide.script);
+            return audio.src && <AudioGuide client:idle id={id} title={ch.quote.label} trip={trip} script={ch.quote.guide.script} {...audio} />;
+          })()}
         </blockquote>
       </div>
     )}
@@ -81,12 +91,31 @@ const railId = `rail-${ch.id}`;
               <div class="meta label"><span>{String(i + 1).padStart(2, '0')}</span><span>{p.meta}</span></div>
               <h4>{p.title}</h4>
               <p>{p.text}</p>
-              {p.more.length > 0 && (
-                <details class="more">
-                  <summary><span class="when-closed">Leer más</span><span class="when-open">Cerrar</span></summary>
-                  <div class="dm">{p.more.map((m) => <p>{m}</p>)}</div>
-                </details>
-              )}
+              {(() => {
+                // Un solo "Leer más" por tarjeta: datos extra y, si hay audioguía, su narración.
+                const id = guideId(p.title);
+                const audio = p.guide && guideAudio(viaje, id, p.guide.script);
+                const guide = p.guide && audio?.src ? p.guide : undefined;
+                return (
+                  <>
+                    {guide && audio && <AudioGuide client:idle id={id} title={p.title} trip={trip} script={guide.script} transcript={false} {...audio} />}
+                    {(p.more.length > 0 || guide) && (
+                      <details class="more">
+                        <summary><span class="when-closed">Leer más</span><span class="when-open">Cerrar</span></summary>
+                        <div class="dm">
+                          {p.more.map((m) => <p>{m}</p>)}
+                          {guide && (
+                            <div class="narr">
+                              <span class="label">La narración</span>
+                              {guide.script.map((s) => <p>{s}</p>)}
+                            </div>
+                          )}
+                        </div>
+                      </details>
+                    )}
+                  </>
+                );
+              })()}
             </article>
           ))}
         </div>
@@ -111,11 +140,11 @@ const railId = `rail-${ch.id}`;
   .ch { position: relative; isolation: isolate; overflow: hidden; counter-reset: dato; }
   .body { padding-block: 104px; display: flex; flex-direction: column; gap: 56px; }
   .compact .body { padding-block: 88px; }
-  .ch-mist { background: var(--mist); color: var(--mist-ink); }
-  .ch-paper { background: var(--paper); color: var(--ink); }
-  .ch-sage { background: var(--sage); color: var(--sage-ink); }
-  .ch-dusk { background: linear-gradient(170deg, var(--dusk-a) 0%, var(--dusk-b) 50%, var(--dusk-c) 100%); color: #fff; }
-  .ch-night { background: var(--night); color: #e9e7f2; }
+  .ch-mist { background: var(--mist); color: var(--mist-ink); --ag-bg: var(--mist); }
+  .ch-paper { background: var(--paper); color: var(--ink); --ag-bg: var(--paper); }
+  .ch-sage { background: var(--sage); color: var(--sage-ink); --ag-bg: var(--sage); }
+  .ch-dusk { background: linear-gradient(170deg, var(--dusk-a) 0%, var(--dusk-b) 50%, var(--dusk-c) 100%); color: #fff; --ag-bg: var(--dusk-b); }
+  .ch-night { background: var(--night); color: #e9e7f2; --ag-bg: var(--night); }
 
   .head { display: grid; grid-template-columns: 220px 1fr; gap: 24px 48px; align-items: start; }
   .head > * { min-width: 0; }
@@ -188,16 +217,26 @@ const railId = `rail-${ch.id}`;
   details.more .when-open, details.more[open] .when-closed { display: none; }
   details.more[open] .when-open { display: inline; }
   details.more { align-self: flex-start; }
-  /* El "Leer más" se abre encima de la foto: la tarjeta no cambia de alto y el carrusel no se mueve. */
+  /* El "Leer más" se abre encima de la foto: la tarjeta no cambia de alto y el carrusel no se mueve.
+     El texto se pega abajo con `margin-top: auto` (no `justify-content: flex-end`) para que, si es largo,
+     como la narración, se pueda desplazar desde el principio. */
   details.more .dm {
     position: absolute; top: 0; left: 0; right: 0; aspect-ratio: 4/5; overflow-y: auto; border-radius: 2px;
-    display: flex; flex-direction: column; justify-content: flex-end; gap: 12px; padding: 24px;
+    display: flex; flex-direction: column; gap: 12px; padding: 24px;
     background: rgba(18, 20, 23, 0.86); color: #fff; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
     font-size: 15px; font-weight: 300; line-height: 1.55; animation: dm-in 0.25s ease-out;
   }
-  details.more .dm p + p { border-top: 1px solid rgba(255, 255, 255, 0.25); padding-top: 12px; }
+  details.more .dm > :first-child { margin-top: auto; }
+  details.more .dm > p + p { border-top: 1px solid rgba(255, 255, 255, 0.25); padding-top: 12px; }
+  .narr { display: flex; flex-direction: column; gap: 10px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.25); }
+  .narr .label { opacity: 0.7; }
+  .dm > .narr:first-child { padding-top: 0; border-top: 0; }
   @keyframes dm-in { from { opacity: 0; } }
   @media (prefers-reduced-motion: reduce) { details.more .dm { animation: none; } }
+  .place :global(.ag) { margin-top: 4px; }
+
+  .story :global(.ag) { margin-top: 28px; max-width: 520px; }
+  .story :global(.ag-text .dm p) { font-family: var(--sans); font-size: 15px; line-height: 1.6; }
 
   .stars {
     position: absolute; inset: 0; z-index: -1; opacity: 0.6;

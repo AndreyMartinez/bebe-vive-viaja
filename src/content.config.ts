@@ -14,6 +14,11 @@ const viajes = defineCollection({
   schema: ({ image }) => {
     const fact = z.object({ label: z.string(), num: z.string().optional(), text: z.string() });
     const caption = z.tuple([z.string(), z.string()]);
+    /**
+     * Audioguía: guion en párrafos. `…` = pausa corta; cada párrafo = pausa larga.
+     * `voice` y `style` (voz y dirección de actuación) solo los usa el motor Gemini. Ver specs/audioguias.
+     */
+    const guide = z.object({ script: z.array(z.string()).min(1), voice: z.string().optional(), style: z.string().optional() });
     return z.object({
       title: z.string(),
       titleAccent: z.string(),
@@ -29,6 +34,8 @@ const viajes = defineCollection({
       cover: image(),
       coverAlt: z.string(),
       sunset: hhmm.optional(),
+      /** Audioguía del tour completo: se muestra antes del primer capítulo. */
+      guide: guide.optional(),
       chapters: z.array(
         z.object({
           id: z.string(),
@@ -47,7 +54,7 @@ const viajes = defineCollection({
             .object({ image: image(), alt: z.string(), caption, note: z.string().optional(), fact: fact.optional() })
             .optional(),
           quote: z
-            .object({ image: image(), alt: z.string(), caption, label: z.string(), text: z.string() })
+            .object({ image: image(), alt: z.string(), caption, label: z.string(), text: z.string(), guide: guide.optional() })
             .optional(),
           placesTitle: z.string().optional(),
           placesTitleEm: z.string().optional(),
@@ -60,6 +67,7 @@ const viajes = defineCollection({
                 title: z.string(),
                 text: z.string(),
                 more: z.array(z.string()).default([]),
+                guide: guide.optional(),
               }),
             )
             .default([]),

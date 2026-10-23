@@ -11,6 +11,7 @@ Sitio de la agencia de viajes en grupo **Bebe, Vive, Viaja** (salidas desde CDMX
 
 ## Comandos
 - `npm run dev` · `npm run build` · `npm run preview` · `npm run check` (correr check + build antes de dar algo por terminado)
+- `npm run audioguias`: convierte los guiones (`guide.script` en lugares y leyendas del JSON) en MP3 en `public/audioguias/<viaje>/`. Con `GEMINI_API_KEY` en `.env` usa Gemini TTS (voz y dirección en `guide.voice`/`guide.style`); sin clave, la voz de macOS. Requiere ffmpeg; regenera solo lo que cambió. Pruebas de voz: `-- --muestra <id> --voces A,B`. Sin MP3, la página usa la voz del navegador. Ver `specs/audioguias/`.
 
 ## Specs (SDD)
 - Toda funcionalidad nueva pasa por `specs/<nombre>/`: `requirements.md` (EARS) → `design.md` → `tasks.md` → código, con aprobación en cada paso. Skills: `/spec`, `/design`, `/plan`, `/implement`. Ver `specs/README.md` y las plantillas en `specs/_plantillas/`.
@@ -21,6 +22,7 @@ Sitio de la agencia de viajes en grupo **Bebe, Vive, Viaja** (salidas desde CDMX
 - React solo para interacción (Countdown, Checklist, RailControls). Todo lo demás en `.astro`.
 - Fotos siempre por `Photo.astro` (optimiza a WebP calidad 90 y conecta el visor `[data-full]`). Fotos reales de viajes en `src/assets/nosotros/`, listadas en `src/lib/fotos.ts` (las usan el carrusel de portada y la sección Nosotros).
 - Sistema visual en `src/styles/global.css`: serif Instrument Serif para titulares, Geist para texto, Geist Mono para etiquetas/datos. Temas por capítulo: `mist`, `paper`, `sage`, `dusk`, `night`. Nada de nubes ni elementos "bubbly": estilo editorial, filetes finos, datos numerados.
+- Audioguías: tono de suspenso, en segunda persona, 1.5 a 3 min; `…` marca pausa corta y cada párrafo pausa larga. Leyendas siempre presentadas como leyendas ("cuentan", "dicen"); los datos, verificables.
 - Créditos de fotos de Wikimedia Commons van en `credits` del JSON y se muestran en el pie (obligatorio por licencia CC BY / BY-SA).
 - La fecha/hora de los viajes es hora del centro de México (`utcOffset: "-06:00"`, sin horario de verano).
 

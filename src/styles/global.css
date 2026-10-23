@@ -133,3 +133,34 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   html { scroll-behavior: auto; }
 }
+
+/* Audioguía (isla AudioGuide.tsx): botón sólido + onda del audio real. Hereda el color de la sección;
+   `--ag-bg` es el fondo de la sección, para pintar el ícono dentro del botón. */
+.ag { display: flex; flex-direction: column; gap: 12px; }
+.ag-row { display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: center; }
+.ag-btn {
+  width: 40px; height: 40px; border-radius: 50%; border: 0; padding: 0; background: currentColor; color: inherit;
+  display: grid; place-items: center; cursor: pointer; transition: transform 0.15s, opacity 0.2s;
+}
+.ag-btn svg { width: 16px; height: 16px; fill: none; stroke: var(--ag-bg, var(--paper)); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ag-btn[aria-pressed='false'] svg path { fill: var(--ag-bg, var(--paper)); }
+.ag-btn:hover { opacity: 0.85; }
+.ag-btn:active { transform: scale(0.94); }
+.ag-btn:focus-visible, .ag-wave:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.ag-main { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.ag-wave { display: flex; align-items: center; gap: 2px; height: 30px; cursor: pointer; }
+.ag-wave i { flex: 1; min-width: 2px; border-radius: 1px; background: currentColor; opacity: 0.28; transition: opacity 0.25s; }
+.ag-wave i.on { opacity: 1; }
+.ag-wave i.now { opacity: 1; animation: ag-pulse 0.9s ease-in-out infinite; }
+.ag-wave:hover i:not(.on) { opacity: 0.4; }
+.ag-top { display: flex; justify-content: space-between; gap: 10px; opacity: 0.75; font-variant-numeric: tabular-nums; }
+.ag-text { align-self: flex-start; }
+.ag-text summary {
+  cursor: pointer; list-style: none; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  display: inline-flex; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid currentColor;
+}
+.ag-text summary::-webkit-details-marker { display: none; }
+.ag-text summary::after { content: '+'; font-size: 14px; }
+.ag-text[open] summary::after { content: '–'; }
+.ag-text .dm { display: flex; flex-direction: column; gap: 10px; padding-top: 10px; font-family: var(--sans); font-size: 14px; font-weight: 300; line-height: 1.6; }
+@keyframes ag-pulse { 50% { opacity: 0.35; } }
