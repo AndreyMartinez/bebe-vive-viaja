@@ -5,7 +5,14 @@
 import { mockEnviar, mockViaje } from './registro-mock';
 
 export type Parada = { nombre: string; direccion: string; maps: string };
-export type ViajePublico = { ref: string; nombre: string; estado: 'abierto' | 'cerrado'; paradas: Parada[] };
+export type ViajePublico = {
+  ref: string;
+  nombre: string;
+  estado: 'abierto' | 'cerrado';
+  /** Link al instructivo y guía turística (se ofrece al terminar el registro). Vacío = sin botón. */
+  guia?: string;
+  paradas: Parada[];
+};
 
 export type RegistroPayload = {
   ref: string;
@@ -43,6 +50,12 @@ export async function enviarRegistro(api: string, payload: RegistroPayload): Pro
   const res = await fetch(api, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
+}
+
+/** Un link de archivo de Drive (`/file/d/<id>/…` u `open?id=<id>`) se convierte en descarga directa; cualquier otro se deja igual. */
+export function linkDescarga(url: string) {
+  const id = url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([\w-]{20,})/)?.[1];
+  return id ? `https://drive.google.com/uc?export=download&id=${id}` : url;
 }
 
 /** Mapa embebible sin API key. Los links cortos de Maps no se pueden embeber, así que se ubica por dirección. */

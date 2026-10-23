@@ -79,6 +79,17 @@ La organizadora administra los viajes desde una página admin: da de alta el via
 4.9. SI el envío falla ENTONCES la página DEBERÁ conservar lo capturado, explicar el error y permitir reintentar.
 4.10. El formulario DEBERÁ usarse cómodamente en celular (375 px) sin scroll horizontal y respetar el sistema visual del sitio.
 
+### Requisito 7 · Instructivo y guía turística al terminar
+
+**Historia de usuario:** Como viajero, quiero descargar el instructivo y la guía turística en cuanto termino mi registro, para tener a la mano todo lo del viaje.
+
+#### Criterios de aceptación
+
+7.1. El admin DEBERÁ permitir guardar, cambiar o quitar un link al instructivo y guía turística de cada viaje (al crearlo o después).
+7.2. CUANDO el registro se guarda Y el viaje tiene link de guía ENTONCES la confirmación DEBERÁ mostrar un botón grande "Descargar instructivo y guía turística".
+7.3. SI el link es de un archivo de Google Drive ENTONCES el botón DEBERÁ descargarlo directo.
+7.4. SI el viaje no tiene link de guía ENTONCES la confirmación NO DEBERÁ mostrar el botón.
+
 ### Requisito 5 · Validación del comprobante
 
 **Historia de usuario:** Como organizadora, quiero marcar en la hoja qué comprobantes ya revisé, para saber quién tiene su lugar confirmado.

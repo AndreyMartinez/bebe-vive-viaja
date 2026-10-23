@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { enviarRegistro, fetchViaje, mapaEmbed, mapaLink, type RegistroPayload, type ViajePublico } from '../../lib/registro';
+import { enviarRegistro, fetchViaje, linkDescarga, mapaEmbed, mapaLink, type RegistroPayload, type ViajePublico } from '../../lib/registro';
 
 interface Props {
   /** URL /exec de la API de Apps Script (`site.registroApi`). */
@@ -152,6 +152,21 @@ export default function Registro({ api }: Props) {
           <span className="label">Tu folio</span>
           <span className="reg-folio">{folio}</span>
         </section>
+        {viaje.guia && (
+          <a className="reg-guia" href={linkDescarga(viaje.guia)} target="_blank" rel="noopener">
+            <span className="reg-guia-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 4v12" />
+                <path d="m7 11 5 5 5-5" />
+                <path d="M4 20h16" />
+              </svg>
+            </span>
+            <span className="reg-guia-txt">
+              <b>Descargar instructivo y guía turística</b>
+              <small>Todo lo que necesitas saber antes de salir: horarios, qué llevar y qué vamos a conocer.</small>
+            </span>
+          </a>
+        )}
         <dl className="reg-resumen">
           <div>
             <dt className="label">Te recogemos en</dt>
