@@ -10,6 +10,10 @@ interface Props {
   src?: string;
   /** Segundos (reales o estimados). */
   duration: number;
+  /** Forma de onda real (0–100 por barra). Sin ella se dibuja una a partir del id. */
+  peaks?: number[];
+  /** Muestra "Leer la narración". En las tarjetas de lugar la narración va dentro de "Leer más". */
+  transcript?: boolean;
 }
 
 /** Al empezar una guía se avisa a las demás para que se pausen. */
@@ -27,12 +31,22 @@ function phrases(script: string[]) {
   return out;
 }
 
+/** Onda de respaldo, estable por guía (misma forma en cada build). */
+function fakePeaks(seed: string, n = 48) {
+  let h = 2166136261;
+  for (const c of seed) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
+  return Array.from({ length: n }, () => {
+    h = Math.imul(h ^ (h >>> 15), 2246822507);
+    return 20 + ((h >>> 0) % 80);
+  });
+}
+
 function spanishVoice() {
   const voices = speechSynthesis.getVoices();
   return voices.find((v) => v.lang === 'es-MX') ?? voices.find((v) => v.lang.startsWith('es'));
 }
 
-export default function AudioGuide({ id, title, trip, script, src, duration }: Props) {
+export default function AudioGuide({ id, title, trip, script, src, duration, peaks, transcript = true }: Props) {
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(0);
   const [total, setTotal] = useState(duration);
@@ -147,6 +161,8 @@ export default function AudioGuide({ id, title, trip, script, src, duration }: P
   }
 
   const pct = total ? Math.min(100, (time / total) * 100) : 0;
+  const bars = peaks?.length ? peaks : fakePeaks(id);
+  const played = (pct / 100) * bars.length;
 
   return (
     <div className="ag" data-playing={playing || undefined}>
@@ -160,16 +176,12 @@ export default function AudioGuide({ id, title, trip, script, src, duration }: P
             onClick={() => (playing ? pause() : play())}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
-              {playing ? <path d="M8 5v14M16 5v14" /> : <path d="M8 5l11 7-11 7z" />}
+              {playing ? <path d="M8.5 5.5v13M15.5 5.5v13" /> : <path d="M8 5.2l11 6.8-11 6.8z" />}
             </svg>
           </button>
           <div className="ag-main">
-            <div className="ag-top label">
-              <span>{playing ? 'Escuchando' : 'Audioguía'}</span>
-              <span>{time > 0 ? `${mmss(time)} / ${mmss(total)}` : mmss(total)}</span>
-            </div>
             <div
-              className="ag-bar"
+              className="ag-wave"
               role="slider"
               tabIndex={0}
               aria-label={`Avance de ${title}`}
@@ -186,19 +198,31 @@ export default function AudioGuide({ id, title, trip, script, src, duration }: P
                 if (e.key === 'ArrowLeft') seek(time - 10);
               }}
             >
-              <i style={{ width: `${pct}%` }} />
+              {bars.map((h, i) => (
+                <i
+                  key={i}
+                  className={i < Math.floor(played) ? 'on' : playing && i === Math.floor(played) ? 'now' : undefined}
+                  style={{ height: `${h}%` }}
+                />
+              ))}
+            </div>
+            <div className="ag-top label">
+              <span>{playing ? 'Escuchando' : 'Audioguía'}</span>
+              <span>{time > 0 ? `${mmss(time)} / ${mmss(total)}` : mmss(total)}</span>
             </div>
           </div>
         </div>
       )}
-      <details className="more ag-text">
-        <summary>Leer la narración</summary>
-        <div className="dm">
-          {script.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
-        </div>
-      </details>
+      {transcript && (
+        <details className="more ag-text">
+          <summary>Leer la narración</summary>
+          <div className="dm">
+            {script.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+        </details>
+      )}
     </div>
   );
 }

@@ -39,7 +39,8 @@ Isla React `client:idle` (con `client:visible` un toque justo después de hacer 
 - Con `src`: `<audio preload="none">` creado al primer play. Barra con `timeupdate`, clic en barra para adelantar. Media Session con título, artista = nombre del viaje y acciones play/pause/seek.
 - Sin `src`: `speechSynthesis` habla el guion partido en frases; las pausas se hacen con `setTimeout` entre frases. Voz preferida `es-MX`, luego cualquier `es-*`. La barra avanza por frases.
 - Exclusión: al empezar, despacha `window` event `bvv-audioguia` con su id; las demás instancias se pausan al recibirlo.
-- Texto: `<details>` "Leer la narración" con los párrafos (siempre presente: accesible y respaldo).
+- Texto: `<details>` "Leer la narración" con los párrafos. En las tarjetas de lugar (`transcript={false}`) la narración va dentro del único "Leer más" de la tarjeta.
+- Diseño "onda de sonido" (elegido el 22 oct 2026 entre 4 propuestas): botón sólido de 40 px (ícono con `--ag-bg`, el fondo del capítulo) y 48 barras con la forma de onda real del MP3 (`peaks` en el manifest, calculadas por el script; `--ondas` las recalcula sin API). Las barras ya escuchadas se llenan, la actual pulsa y un clic en la onda adelanta.
 - Botón con `aria-pressed`, `aria-label` con el título; barra `role="slider"` con `aria-valuenow`.
 
 ## Página

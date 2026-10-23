@@ -15,7 +15,7 @@ export const guideId = (title: string) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
 
-type Manifest = Record<string, { hash: string; duration: number }>;
+type Manifest = Record<string, { hash: string; duration: number; peaks?: number[] }>;
 let manifest: Manifest | undefined;
 function readManifest(): Manifest {
   if (!manifest) {
@@ -28,13 +28,18 @@ function readManifest(): Manifest {
   return manifest!;
 }
 
-/** URL del MP3 (si ya se generó) y duración en segundos (real o estimada a 150 palabras por minuto). */
+/**
+ * URL del MP3 (si ya se generó), duración en segundos (real o estimada a 150 palabras por minuto)
+ * y forma de onda (0–100 por barra, calculada por `npm run audioguias`).
+ */
 export function guideAudio(viaje: string, id: string, script: string[]) {
   const file = `audioguias/${viaje}/${id}.mp3`;
   const has = existsSync(`public/${file}`);
   const words = script.join(' ').split(/\s+/).length;
+  const entry = readManifest()[file];
   return {
     src: has ? url(`/${file}`) : undefined,
-    duration: Math.round(readManifest()[file]?.duration ?? (words / 150) * 60),
+    duration: Math.round(entry?.duration ?? (words / 150) * 60),
+    peaks: entry?.peaks,
   };
 }

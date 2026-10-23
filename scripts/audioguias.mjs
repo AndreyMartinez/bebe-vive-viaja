@@ -7,6 +7,7 @@
  *   npm run audioguias -- --muestra pueblo-leyenda --voces Enceladus,Algenib,Charon
  *                                      pruebas de voz en muestras-audioguias/ (no se publican)
  *   npm run audioguias -- --solo los-chinelos   regenera solo esa guía
+ *   npm run audioguias -- --ondas        recalcula la forma de onda de los MP3 existentes (sin API)
  *   npm run audioguias -- --elegir pueblo-leyenda --voz Enceladus
  *                                      deja esa muestra como la audioguía publicada
  *
@@ -50,6 +51,7 @@ const force = process.argv.includes('--force');
 const muestra = arg('--muestra');
 const elegir = arg('--elegir');
 const solo = arg('--solo');
+const ondas = process.argv.includes('--ondas');
 const vozElegida = arg('--voz');
 const voces = arg('--voces')?.split(',').map((v) => v.trim()).filter(Boolean);
 
@@ -67,7 +69,7 @@ function need(cmd, args, hint) {
 }
 need('ffmpeg', ['-version'], 'Instálalo con: brew install ffmpeg');
 if (MOTOR === 'macos') need('say', ['-v', '?'], 'El motor macos solo funciona en macOS. Usa VOZ_MOTOR=gemini.');
-if (MOTOR === 'gemini' && !KEY) {
+if (MOTOR === 'gemini' && !KEY && !process.argv.includes('--ondas')) {
   console.error('✗ Falta GEMINI_API_KEY en .env (ver .env.example).');
   process.exit(1);
 }
@@ -164,8 +166,40 @@ function hashOf(g, v) {
 }
 
 const readManifest = () => (existsSync(MANIFEST) ? JSON.parse(readFileSync(MANIFEST, 'utf8')) : {});
+/** Una línea por audio para que el diff sea legible. */
 const writeManifest = (m) =>
-  writeFileSync(MANIFEST, JSON.stringify(Object.fromEntries(Object.entries(m).sort()), null, 2) + '\n');
+  writeFileSync(
+    MANIFEST,
+    '{\n' +
+      Object.entries(m)
+        .sort()
+        .map(([k, v]) => `  ${JSON.stringify(k)}: ${JSON.stringify(v)}`)
+        .join(',\n') +
+      '\n}\n',
+  );
+
+/**
+ * Forma de onda real del MP3 para el reproductor: BARRAS valores 0–100 (RMS por tramo, escalado al máximo).
+ * Se omite la entrada de atmósfera (2.5 s) para que la onda empiece donde empieza la voz.
+ */
+const BARRAS = 48;
+function peaksOf(mp3) {
+  const rate = 4000;
+  const pcm = execFileSync('ffmpeg', ['-v', 'error', '-ss', '2.5', '-i', mp3, '-ac', '1', '-ar', String(rate), '-f', 's16le', '-'], {
+    maxBuffer: 64 * 1024 * 1024,
+  });
+  const samples = new Int16Array(pcm.buffer, pcm.byteOffset, Math.floor(pcm.length / 2));
+  const size = Math.max(1, Math.floor(samples.length / BARRAS));
+  const rms = Array.from({ length: BARRAS }, (_, b) => {
+    let sum = 0;
+    for (let i = b * size; i < (b + 1) * size && i < samples.length; i++) sum += samples[i] * samples[i];
+    return Math.sqrt(sum / size);
+  });
+  // Escala entre el tramo más suave y el más fuerte (la voz va normalizada, así que el rango útil es estrecho).
+  const min = Math.min(...rms);
+  const max = Math.max(...rms);
+  return rms.map((r) => Math.round(15 + ((r - min) / (max - min || 1)) ** 1.5 * 85));
+}
 
 const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
 
@@ -191,7 +225,18 @@ async function voice(g, v, file) {
 }
 
 try {
-  if (elegir) {
+  if (ondas) {
+    // Solo calcula la forma de onda de los MP3 que ya existen (no llama a ninguna API).
+    const manifest = readManifest();
+    let n = 0;
+    for (const [rel, entry] of Object.entries(manifest)) {
+      if (!existsSync(join('public', rel))) continue;
+      entry.peaks = peaksOf(join('public', rel));
+      n++;
+    }
+    writeManifest(manifest);
+    console.log(`Ondas calculadas: ${n}.`);
+  } else if (elegir) {
     // Una muestra que gustó se queda como definitiva, tal cual (Gemini no repite exactamente la misma lectura).
     const g = all.find((x) => x.id === elegir);
     if (!g) throw new Error(`No hay guía con id "${elegir}". Ids: ${all.map((x) => x.id).join(', ')}`);
@@ -204,7 +249,7 @@ try {
     copyFileSync(src, join('public', rel));
     const duration = Number(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', src]));
     const manifest = readManifest();
-    manifest[rel] = { hash: hashOf(g, v), duration: Math.round(duration) };
+    manifest[rel] = { hash: hashOf(g, v), duration: Math.round(duration), peaks: peaksOf(src) };
     writeManifest(manifest);
     console.log(`✓ ${rel} ← ${src}  ${mmss(duration)}`);
   } else if (muestra) {
@@ -235,7 +280,7 @@ try {
       const wav = join(tmp, `${g.id}.${MOTOR === 'gemini' ? 'wav' : 'aiff'}`);
       await voice(g, v, wav);
       const total = mix(wav, out, g);
-      manifest[rel] = { hash, duration: Math.round(total) };
+      manifest[rel] = { hash, duration: Math.round(total), peaks: peaksOf(out) };
       // Se guarda tras cada guía: si algo falla a la mitad, lo hecho no se repite.
       writeManifest(manifest);
       made++;

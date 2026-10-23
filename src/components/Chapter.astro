@@ -91,17 +91,31 @@ const railId = `rail-${ch.id}`;
               <div class="meta label"><span>{String(i + 1).padStart(2, '0')}</span><span>{p.meta}</span></div>
               <h4>{p.title}</h4>
               <p>{p.text}</p>
-              {p.guide && (() => {
+              {(() => {
+                // Un solo "Leer más" por tarjeta: datos extra y, si hay audioguía, su narración.
                 const id = guideId(p.title);
-                const audio = guideAudio(viaje, id, p.guide.script);
-                return audio.src && <AudioGuide client:idle id={id} title={p.title} trip={trip} script={p.guide.script} {...audio} />;
+                const audio = p.guide && guideAudio(viaje, id, p.guide.script);
+                const guide = p.guide && audio?.src ? p.guide : undefined;
+                return (
+                  <>
+                    {guide && audio && <AudioGuide client:idle id={id} title={p.title} trip={trip} script={guide.script} transcript={false} {...audio} />}
+                    {(p.more.length > 0 || guide) && (
+                      <details class="more">
+                        <summary>Leer más</summary>
+                        <div class="dm">
+                          {p.more.map((m) => <p>{m}</p>)}
+                          {guide && (
+                            <div class="narr">
+                              <span class="label">La narración</span>
+                              {guide.script.map((s) => <p>{s}</p>)}
+                            </div>
+                          )}
+                        </div>
+                      </details>
+                    )}
+                  </>
+                );
               })()}
-              {p.more.length > 0 && (
-                <details class="more">
-                  <summary>Leer más</summary>
-                  <div class="dm">{p.more.map((m) => <p>{m}</p>)}</div>
-                </details>
-              )}
             </article>
           ))}
         </div>
@@ -126,11 +140,11 @@ const railId = `rail-${ch.id}`;
   .ch { position: relative; isolation: isolate; overflow: hidden; counter-reset: dato; }
   .body { padding-block: 104px; display: flex; flex-direction: column; gap: 56px; }
   .compact .body { padding-block: 88px; }
-  .ch-mist { background: var(--mist); color: var(--mist-ink); }
-  .ch-paper { background: var(--paper); color: var(--ink); }
-  .ch-sage { background: var(--sage); color: var(--sage-ink); }
-  .ch-dusk { background: linear-gradient(170deg, var(--dusk-a) 0%, var(--dusk-b) 50%, var(--dusk-c) 100%); color: #fff; }
-  .ch-night { background: var(--night); color: #e9e7f2; }
+  .ch-mist { background: var(--mist); color: var(--mist-ink); --ag-bg: var(--mist); }
+  .ch-paper { background: var(--paper); color: var(--ink); --ag-bg: var(--paper); }
+  .ch-sage { background: var(--sage); color: var(--sage-ink); --ag-bg: var(--sage); }
+  .ch-dusk { background: linear-gradient(170deg, var(--dusk-a) 0%, var(--dusk-b) 50%, var(--dusk-c) 100%); color: #fff; --ag-bg: var(--dusk-b); }
+  .ch-night { background: var(--night); color: #e9e7f2; --ag-bg: var(--night); }
 
   .head { display: grid; grid-template-columns: 220px 1fr; gap: 24px 48px; align-items: start; }
   .head > * { min-width: 0; }
@@ -199,6 +213,10 @@ const railId = `rail-${ch.id}`;
   details.more summary::after { content: '+'; font-size: 14px; }
   details.more[open] summary::after { content: '–'; }
   details.more .dm { display: flex; flex-direction: column; gap: 8px; padding-top: 10px; font-size: 14px; font-weight: 300; }
+  .narr { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; padding-top: 12px; border-top: 1px solid currentColor; }
+  .narr .label { opacity: 0.7; }
+  .dm > .narr:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+  .place :global(.ag) { margin-top: 4px; }
 
   .story :global(.ag) { margin-top: 28px; max-width: 520px; }
   .story :global(.ag-text .dm p) { font-family: var(--sans); font-size: 15px; line-height: 1.6; }
