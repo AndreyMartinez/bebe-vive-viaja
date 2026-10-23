@@ -10,8 +10,11 @@ interface Props {
   description?: string;
   image?: string;
   credits?: { file: string; author: string; license: string }[];
+  /** Manifest para "Agregar a pantalla de inicio"; cada viaje pasa el suyo para que el ícono abra el viaje. */
+  manifest?: string;
+  noindex?: boolean;
 }
-const { title, description = site.description, image, credits = [] } = Astro.props;
+const { title, description = site.description, image, credits = [], manifest = url('/manifest.webmanifest'), noindex = false } = Astro.props;
 const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · ${site.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
 const ogImage = image ? new URL(image, Astro.site ?? Astro.url).href : undefined;
@@ -26,6 +29,12 @@ const ogImage = image ? new URL(image, Astro.site ?? Astro.url).href : undefined
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
     <meta name="theme-color" content="#121417" />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="manifest" href={manifest} />
+    <link rel="apple-touch-icon" href={url('/icons/apple-touch-icon.png')} />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={fullTitle} />
@@ -44,5 +53,19 @@ const ogImage = image ? new URL(image, Astro.site ?? Astro.url).href : undefined
     <slot />
     <Footer credits={credits} />
     <Lightbox />
+    {import.meta.env.PROD && (
+      <script is:inline define:vars={{ sw: url('/sw.js'), scope: url('/') }}>
+        // Viaje sin conexión: el SW solo sirve lo que el viajero guardó (ver public/sw.js).
+        if ('serviceWorker' in navigator) {
+          addEventListener('load', () => navigator.serviceWorker.register(sw, { scope }).catch(() => {}));
+        }
+        // Android: se guarda el aviso de instalación para que la isla OfflineSave ofrezca su propio botón.
+        addEventListener('beforeinstallprompt', (e) => {
+          e.preventDefault();
+          window.bvvInstall = e;
+          dispatchEvent(new Event('bvv-install'));
+        });
+      </script>
+    )}
   </body>
 </html>

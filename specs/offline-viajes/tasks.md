@@ -1,0 +1,75 @@
+# Plan de implementación · Viaje sin conexión
+
+- [x] 1. Lista de archivos por viaje en el build
+  - [x] 1.1 Integración `src/integrations/offline.ts` con hook `astro:build:done`
+    - Recorre `dist/viajes/<slug>/index.html` (sin `dist/viajes/index.html`) y extrae URLs del sitio desde `src`, `href` de `<link>` (stylesheet, icon, manifest, apple-touch-icon), `data-full`, `component-url`, `renderer-url`, `before-hydration-url`, `url(...)` en línea y `audioguias/…mp3` dentro de `props` de `<astro-island>`
+    - `srcset`: guarda solo el candidato más ancho y registra en `aliases` las demás tallas apuntando a él
+    - Sigue `import … from "./x.js"` en los `.js` y `url()` en los `.css` de forma recursiva
+    - Separa en `fonts` las URLs de `fonts.googleapis.com/css2`
+    - Descarta lo que no existe en `dist`; calcula `bytes` y `version` (SHA-256 de los contenidos, 12 caracteres)
+    - Escribe `dist/offline/<slug>.json` con el modelo `OfflineBundle` del diseño (con `title` y `page`)
+    - Registrar en `astro.config.mjs`
+    - Verificar: `npm run build` y revisar `dist/offline/tepoztlan-2026-10.json` (6 MP3, chunks `react`/`jsx-runtime`, 2 CSS, portada, una variante por foto, ≈ 8–9 MB) y que también exista el de `fig-leon-2026-11`
+    - _Requisitos: 1.2, 6.2_
+
+- [x] 2. Página sin conexión, manifests e íconos
+  - [x] 2.1 Íconos
+    - `scripts/iconos.mjs` (usa `sharp`): mandala blanco centrado sobre `#121417` → `public/icons/icon-192.png`, `icon-512.png`, `icon-maskable-512.png` (margen seguro) y `apple-touch-icon.png` (180)
+    - Correrlo una vez y versionar los PNG
+    - _Requisitos: 5.1_
+  - [x] 2.2 Manifests
+    - `src/pages/manifest.webmanifest.ts` (general, `start_url` = base) y `src/pages/viajes/[slug]/manifest.webmanifest.ts` (`start_url` y `scope` = página del viaje, `name` = "<título> · BVV"), con `BASE_URL` como en `robots.txt.ts`
+    - Verificar que no choque la ruta `viajes/[slug]/` con `viajes/[slug].astro` (si choca, usar `src/pages/manifest/[slug].webmanifest.ts`)
+    - _Requisitos: 5.1, 5.3_
+  - [x] 2.3 `Base.astro`
+    - Prop opcional `manifest`; `<link rel="manifest">`, `<link rel="apple-touch-icon">`, `<meta name="apple-mobile-web-app-capable">`
+    - _Requisitos: 5.1_
+  - [x] 2.4 `src/pages/sin-conexion.astro`
+    - Con `Base`, `noindex`; script en línea que lista las cachés `bvv-viaje-*` leyendo su `__meta` (título y enlace); mensaje si no hay ninguna
+    - Excluir `/sin-conexion/` del sitemap en `astro.config.mjs`
+    - Incluir la página y sus archivos, el favicon, el manifest del viaje y los íconos en el JSON de la tarea 1
+    - _Requisitos: 2.5_
+
+- [x] 3. Lógica de guardado `src/lib/offline.ts`
+  - Tipos `OfflineBundle` y `SavedMeta`; `cacheName`, `findSaved`, `saveTrip(bundle, onProgress)`, `removeTrip`, `requestPersist`
+  - `saveTrip`: concurrencia 4, `cache: 'no-cache'`, 1 reintento por archivo; descarga el CSS de Google Fonts y sus `woff2` sin que su falla bloquee el guardado; al final escribe `__meta` en `BASE + '__meta/<slug>'` y borra las demás versiones del viaje; si falla, borra la caché a medias y lanza un error con tipo (`red` o `espacio`)
+  - _Requisitos: 1.2, 1.6, 4.1, 4.2, 4.4_
+
+- [x] 4. Service worker `public/sw.js`
+  - `install` → `skipWaiting`, `activate` → `clients.claim`; no precarga nada
+  - `fetch` solo `GET`; pasa directo lo externo (salvo Google Fonts), `offline/`, `sw.js`
+  - Navegaciones: caché (`ignoreSearch`) → red → `sin-conexion/` → texto plano
+  - Archivos: caché → alias desde `__meta` → red
+  - `Range` sobre una respuesta en caché → `206` con `Content-Range`
+  - Registro en `Base.astro` solo en producción, con `url('/sw.js')` y `scope: url('/')`
+  - _Requisitos: 1.8, 2.1, 2.2, 2.4, 2.5, 4.1, 4.3, 6.1, 6.4_
+
+- [x] 5. Isla `OfflineSave.tsx` y montaje
+  - [x] 5.1 Isla
+    - Oculta en dev o si faltan `serviceWorker`/`caches`
+    - Carga el JSON (`no-cache`) y el estado guardado; estados `cargando`, `listo`, `descargando`, `guardado`, `actualizando`, `error`
+    - Textos: "Descargar para usar sin señal · ≈ X MB", "Descargando n / total" con barra, "Disponible sin conexión ✓ · guardado <fecha>", "Quitar del teléfono", "Reintentar", mensaje de espacio
+    - Actualización silenciosa si la versión publicada es distinta y hay red
+    - Aviso "Sin conexión · usando la copia guardada" con `online`/`offline`; nota fija "Mapas, WhatsApp y registro necesitan señal"
+    - Sugerencia de agregar a inicio: iPhone (Compartir → Agregar a inicio; fuera de standalone, "ábrela desde el ícono y toca Guardar ahí también"), Android (`beforeinstallprompt` o "Menú ⋮ → Instalar app")
+    - `aria-live="polite"`, botones nativos, foco visible
+    - _Requisitos: 1.1, 1.3, 1.4, 1.5, 1.6, 1.7, 3.1, 3.2, 3.3, 4.2, 4.4, 5.2, 6.3_
+  - [x] 5.2 Montaje en `src/pages/viajes/[slug].astro`
+    - Franja `.offline` entre `.toc` y `.tour` con `client:idle`; pasar `manifest` del viaje a `Base`
+    - Estilos editoriales: filetes, etiqueta mono, `.btn` existente; 375 px sin desborde
+    - Acceso "Usar sin señal ↓" en la portada del viaje que baja a `#sin-senal` (en celular la franja quedaba bajo el primer pantallazo)
+    - _Requisitos: 1.1, 5.3, 6.3_
+
+- [x] 6. Verificar y documentar
+  - `npm run check` y `npm run build`
+  - `BASE_PATH=/bebe-vive-viaja npm run build && npm run preview` en el panel:
+    - guardar y revisar la caché
+    - apagar `preview` y recargar: página, fotos, visor, checklist, aviso y audio con adelantar
+    - `/` sin red → `sin-conexion/`
+    - cambiar un texto, reconstruir y abrir con red → se actualiza
+    - "Quitar del teléfono"
+    - `/bienvenida/` sin pasar por el SW
+    - vista a 375 px
+  - Actualizar `CLAUDE.md` (sección breve "Viaje sin conexión") y `specs/README.md` si lista las specs
+  - Pendiente para ti: prueba en iPhone (Safari e ícono) y Android con modo avión, ya publicado
+  - _Requisitos: todos, 7.1_

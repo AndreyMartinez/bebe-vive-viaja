@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
+import offline from './src/integrations/offline';
 
 // `SITE_URL`: dominio final (sitemap, canonical y Open Graph).
 // `BASE_PATH`: subcarpeta donde vive el sitio, p. ej. `/bebe-vive-viaja` en GitHub Pages. En Cloudflare se deja vacío.
@@ -10,6 +11,6 @@ export default defineConfig({
   base: process.env.BASE_PATH || '/',
   output: 'static',
   trailingSlash: 'always',
-  integrations: [react(), sitemap({ filter: (page) => !['/politicas-de-cancelacion/', '/bienvenida/'].some((p) => page.includes(p)) })],
+  integrations: [react(), sitemap({ filter: (page) => !['/politicas-de-cancelacion/', '/bienvenida/', '/sin-conexion/'].some((p) => page.includes(p)) }), offline()],
   image: { responsiveStyles: false },
 });
