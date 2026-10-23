@@ -61,9 +61,9 @@ const railId = `rail-${ch.id}`;
     )}
 
     {ch.quote && (
-      <div class="feature center">
+      <div class="feature center portrait">
         <figure>
-          <Photo src={ch.quote.image} alt={ch.quote.alt} caption={ch.quote.caption[0]} ratio="4/3" />
+          <Photo src={ch.quote.image} alt={ch.quote.alt} caption={ch.quote.caption[0]} ratio="4/5" sizes="(max-width: 900px) 100vw, 480px" />
           <figcaption class="cap"><span>{ch.quote.caption[0]}</span><span>{ch.quote.caption[1]}</span></figcaption>
         </figure>
         <blockquote class="story">
@@ -101,7 +101,7 @@ const railId = `rail-${ch.id}`;
                     {guide && audio && <AudioGuide client:idle id={id} title={p.title} trip={trip} script={guide.script} transcript={false} {...audio} />}
                     {(p.more.length > 0 || guide) && (
                       <details class="more">
-                        <summary>Leer más</summary>
+                        <summary><span class="when-closed">Leer más</span><span class="when-open">Cerrar</span></summary>
                         <div class="dm">
                           {p.more.map((m) => <p>{m}</p>)}
                           {guide && (
@@ -170,6 +170,7 @@ const railId = `rail-${ch.id}`;
 
   .feature { display: grid; grid-template-columns: 7fr 5fr; gap: 48px; align-items: end; }
   .feature.center { align-items: center; }
+  .feature.portrait { grid-template-columns: 5fr 7fr; gap: 64px; }
   .feature > * { min-width: 0; }
   .feature :global(.ph) { border-radius: 2px; }
   .side { display: flex; flex-direction: column; gap: 40px; }
@@ -200,7 +201,8 @@ const railId = `rail-${ch.id}`;
     display: grid; grid-auto-flow: column; grid-auto-columns: minmax(280px, 360px); gap: 28px; overflow-x: auto;
     scroll-snap-type: x mandatory; padding-bottom: 12px; scrollbar-width: thin; margin-top: 28px;
   }
-  .place { scroll-snap-align: start; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .rail { align-items: start; }
+  .place { position: relative; scroll-snap-align: start; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
   .place :global(.ph) { border-radius: 2px; }
   .place .meta { display: flex; justify-content: space-between; gap: 10px; opacity: 0.7; }
   .place h4 { font-family: var(--serif); font-size: 30px; line-height: 1.05; }
@@ -212,10 +214,25 @@ const railId = `rail-${ch.id}`;
   details.more summary::-webkit-details-marker { display: none; }
   details.more summary::after { content: '+'; font-size: 14px; }
   details.more[open] summary::after { content: '–'; }
-  details.more .dm { display: flex; flex-direction: column; gap: 8px; padding-top: 10px; font-size: 14px; font-weight: 300; }
-  .narr { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; padding-top: 12px; border-top: 1px solid currentColor; }
+  details.more .when-open, details.more[open] .when-closed { display: none; }
+  details.more[open] .when-open { display: inline; }
+  details.more { align-self: flex-start; }
+  /* El "Leer más" se abre encima de la foto: la tarjeta no cambia de alto y el carrusel no se mueve.
+     El texto se pega abajo con `margin-top: auto` (no `justify-content: flex-end`) para que, si es largo,
+     como la narración, se pueda desplazar desde el principio. */
+  details.more .dm {
+    position: absolute; top: 0; left: 0; right: 0; aspect-ratio: 4/5; overflow-y: auto; border-radius: 2px;
+    display: flex; flex-direction: column; gap: 12px; padding: 24px;
+    background: rgba(18, 20, 23, 0.86); color: #fff; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    font-size: 15px; font-weight: 300; line-height: 1.55; animation: dm-in 0.25s ease-out;
+  }
+  details.more .dm > :first-child { margin-top: auto; }
+  details.more .dm > p + p { border-top: 1px solid rgba(255, 255, 255, 0.25); padding-top: 12px; }
+  .narr { display: flex; flex-direction: column; gap: 10px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.25); }
   .narr .label { opacity: 0.7; }
-  .dm > .narr:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+  .dm > .narr:first-child { padding-top: 0; border-top: 0; }
+  @keyframes dm-in { from { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { details.more .dm { animation: none; } }
   .place :global(.ag) { margin-top: 4px; }
 
   .story :global(.ag) { margin-top: 28px; max-width: 520px; }
@@ -232,6 +249,9 @@ const railId = `rail-${ch.id}`;
   @media (max-width: 900px) {
     .head { grid-template-columns: 1fr; }
     .feature { grid-template-columns: 1fr; gap: 28px; }
+    .feature.portrait { grid-template-columns: 1fr; gap: 72px; }
+    .feature.portrait figure { max-width: 520px; }
+    .story::before { top: -64px; font-size: 140px; }
   }
   @media (max-width: 560px) {
     .body { padding-block: 72px; gap: 40px; }
