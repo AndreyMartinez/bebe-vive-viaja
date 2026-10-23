@@ -92,10 +92,19 @@ function cambiarEstado(ref, nuevo) {
 
 // ---------- internas ----------
 
-function validarGuia_(url) {
-  url = String(url || '').trim();
-  if (url && !/^https:\/\/\S+$/.test(url)) throw new Error('El link de la guía debe empezar con https://');
-  return url;
+/** La guía es la referencia de una página de viaje del sitio (p. ej. tepoztlan-2026-10) o un link https completo. */
+function validarGuia_(guia) {
+  guia = String(guia || '').trim();
+  if (guia && !/^https:\/\/\S+$/.test(guia) && !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(guia)) {
+    throw new Error('Escribe la referencia del viaje en el sitio (p. ej. tepoztlan-2026-10) o un link que empiece con https://');
+  }
+  return guia;
+}
+
+/** Liga completa de la guía, para abrirla desde el admin. */
+function ligaGuia_(base, guia) {
+  if (!guia) return '';
+  return /^https:\/\//.test(guia) ? guia : base + '/viajes/' + encodeURIComponent(guia) + '/';
 }
 
 function hojaViajes_(respuestas) {
@@ -151,6 +160,7 @@ function listarViajes_(cfg, respuestas, paradasSs) {
       urlParadas: shP ? paradasSs.getUrl() + '#gid=' + shP.getSheetId() : paradasSs.getUrl(),
       liga: base + '/bienvenida/?viaje=' + encodeURIComponent(v.ref),
       guia: v.guia,
+      guiaUrl: ligaGuia_(base, v.guia),
     };
   });
 }

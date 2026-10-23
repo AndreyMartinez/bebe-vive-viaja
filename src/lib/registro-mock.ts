@@ -11,7 +11,7 @@ const paradas = [
 ];
 
 const viajes: Record<string, ViajePublico> = {
-  demo: { ref: 'demo', nombre: 'Tepoztlán · Oct 2026', estado: 'abierto', guia: 'https://drive.google.com/file/d/DEMO_ID_DE_ARCHIVO_DE_PRUEBA/view', paradas },
+  demo: { ref: 'demo', nombre: 'Tepoztlán · Oct 2026', estado: 'abierto', guia: 'tepoztlan-2026-10', paradas },
   'demo-cerrado': { ref: 'demo-cerrado', nombre: 'Peña de Bernal · Sep 2026', estado: 'cerrado', paradas },
   'demo-sin-paradas': { ref: 'demo-sin-paradas', nombre: 'FIG León · Nov 2026', estado: 'abierto', paradas: [] },
 };

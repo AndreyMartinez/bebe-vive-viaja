@@ -81,14 +81,14 @@ La organizadora administra los viajes desde una página admin: da de alta el via
 
 ### Requisito 7 · Instructivo y guía turística al terminar
 
-**Historia de usuario:** Como viajero, quiero descargar el instructivo y la guía turística en cuanto termino mi registro, para tener a la mano todo lo del viaje.
+**Historia de usuario:** Como viajero, quiero abrir el instructivo y la guía turística en cuanto termino mi registro, para tener a la mano todo lo del viaje.
 
 #### Criterios de aceptación
 
-7.1. El admin DEBERÁ permitir guardar, cambiar o quitar un link al instructivo y guía turística de cada viaje (al crearlo o después).
-7.2. CUANDO el registro se guarda Y el viaje tiene link de guía ENTONCES la confirmación DEBERÁ mostrar un botón grande "Descargar instructivo y guía turística".
-7.3. SI el link es de un archivo de Google Drive ENTONCES el botón DEBERÁ descargarlo directo.
-7.4. SI el viaje no tiene link de guía ENTONCES la confirmación NO DEBERÁ mostrar el botón.
+7.1. El admin DEBERÁ permitir guardar, cambiar o quitar la guía de cada viaje (al crearlo o después): la referencia de su página en el sitio (p. ej. `tepoztlan-2026-10`) o un link completo.
+7.2. CUANDO el registro se guarda Y el viaje tiene guía ENTONCES la confirmación DEBERÁ mostrar un botón grande "Ver instructivo y guía turística" que abre la página del viaje en una pestaña nueva.
+7.3. SI la guía es una referencia ENTONCES el botón DEBERÁ llevar a `/viajes/<referencia>/` del sitio; SI es un link completo, a ese link.
+7.4. SI el viaje no tiene guía ENTONCES la confirmación NO DEBERÁ mostrar el botón.
 
 ### Requisito 5 · Validación del comprobante
 

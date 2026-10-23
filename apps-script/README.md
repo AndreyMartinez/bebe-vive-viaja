@@ -70,7 +70,7 @@ Haz push a `main`. GitHub Pages publica solo.
 
 1. En el admin escribe el nombre del viaje y toca **Crear viaje**. Se crean la pestaña en Paradas, la pestaña en Respuestas y la subcarpeta de comprobantes.
 2. Abre **Paradas ↗** y llena una fila por parada: nombre, dirección completa y link de Google Maps (opcional). El mapa de la página se ubica por la **dirección**, así que escríbela completa.
-3. Toca **Agregar guía** y pega el link del instructivo y guía turística del viaje (por ejemplo, un PDF en Drive compartido como "Cualquier persona con el enlace"). El viajero lo descarga con un botón grande al terminar su registro.
+3. Toca **Agregar guía** y escribe la referencia de la página del viaje en el sitio (lo que va después de `/viajes/`, p. ej. `tepoztlan-2026-10`) o un link completo. El viajero la abre con un botón grande al terminar su registro.
 4. Toca **Compartir liga** y mándala por WhatsApp a quien pagó su apartado.
 5. Cada registro llega como una fila a **Respuestas ↗**. Revisa el comprobante (enlace a Drive) y marca la casilla **Comprobante validado**.
 6. Cuando ya no quieras registros, toca **Cerrar registro**.

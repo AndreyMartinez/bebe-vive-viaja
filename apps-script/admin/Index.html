@@ -80,9 +80,9 @@
           <span class="ayuda" id="previa">…/bienvenida/?viaje=</span>
         </div>
         <div class="campo">
-          <label class="label" for="guia">Link del instructivo y guía (opcional)</label>
-          <input type="text" id="guia" inputmode="url" placeholder="https://drive.google.com/file/d/…">
-          <span class="ayuda">Lo descarga el viajero al terminar su registro. Si es un PDF de Drive, compártelo como "Cualquier persona con el enlace".</span>
+          <label class="label" for="guia">Instructivo y guía turística (opcional)</label>
+          <input type="text" id="guia" placeholder="tepoztlan-2026-10">
+          <span class="ayuda">Referencia de la página del viaje en el sitio (lo que va después de /viajes/) o un link completo. El viajero la abre con un botón grande al terminar su registro.</span>
         </div>
         <p class="nota">Al crear el viaje se agregan solas una pestaña en <b>Paradas</b>, otra en <b>Respuestas</b> y una carpeta para los comprobantes. Después llena las paradas en su pestaña.</p>
         <button type="submit" class="primario" id="crear">Crear viaje</button>
@@ -149,7 +149,7 @@
           '<span class="ref">?viaje=' + esc(v.ref) + '</span>' +
           '<div class="datos"><span><b>' + v.registros + '</b> registros</span><span><b>' + v.personas + '</b> personas</span>' +
           '<span><b>' + v.pendientes + '</b> comprobantes por validar</span><span><b>' + v.paradas + '</b> paradas</span></div>' +
-          '<span class="ref">Guía: ' + (v.guia ? '<a href="' + esc(v.guia) + '" target="_blank" rel="noopener">ver ↗</a>' : 'sin link') + '</span></div>' +
+          '<span class="ref">Guía: ' + (v.guia ? '<a href="' + esc(v.guiaUrl) + '" target="_blank" rel="noopener">' + esc(v.guia) + ' ↗</a>' : 'sin guía') + '</span></div>' +
           '<div class="acciones">' +
           '<a class="link" href="' + esc(v.urlParadas) + '" target="_blank" rel="noopener">Paradas ↗</a>' +
           '<a class="link" href="' + esc(v.urlRespuestas) + '" target="_blank" rel="noopener">Respuestas ↗</a>' +
@@ -166,7 +166,7 @@
       if (b.dataset.compartir != null) return compartir(viajes[+b.dataset.compartir]);
       if (b.dataset.guia != null) {
         var g = viajes[+b.dataset.guia];
-        var url = prompt('Link del instructivo y guía turística de "' + g.nombre + '" (vacío para quitarlo):', g.guia || '');
+        var url = prompt('Instructivo y guía turística de "' + g.nombre + '": referencia de la página del viaje (p. ej. tepoztlan-2026-10) o un link completo. Vacío para quitarla.', g.guia || '');
         if (url === null) return;
         b.disabled = true;
         return llamar('cambiarGuia', [g.ref, url.trim()]);

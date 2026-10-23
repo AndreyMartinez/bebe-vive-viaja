@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { enviarRegistro, fetchViaje, linkDescarga, mapaEmbed, mapaLink, type RegistroPayload, type ViajePublico } from '../../lib/registro';
+import { enviarRegistro, fetchViaje, linkGuia, mapaEmbed, mapaLink, type RegistroPayload, type ViajePublico } from '../../lib/registro';
 
 interface Props {
   /** URL /exec de la API de Apps Script (`site.registroApi`). */
@@ -153,18 +153,19 @@ export default function Registro({ api }: Props) {
           <span className="reg-folio">{folio}</span>
         </section>
         {viaje.guia && (
-          <a className="reg-guia" href={linkDescarga(viaje.guia)} target="_blank" rel="noopener">
+          // Pestaña nueva: el viajero conserva esta pantalla con su folio.
+          <a className="reg-guia" href={linkGuia(viaje.guia)} target="_blank" rel="noopener">
             <span className="reg-guia-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24">
-                <path d="M12 4v12" />
-                <path d="m7 11 5 5 5-5" />
-                <path d="M4 20h16" />
+                <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10a2 2 0 0 1 2 2v14a1.5 1.5 0 0 0-1.5-1.5h-5A1.5 1.5 0 0 1 4 17Z" />
+                <path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H14a2 2 0 0 0-2 2v14a1.5 1.5 0 0 1 1.5-1.5h5A1.5 1.5 0 0 0 20 17Z" />
               </svg>
             </span>
             <span className="reg-guia-txt">
-              <b>Descargar instructivo y guía turística</b>
-              <small>Todo lo que necesitas saber antes de salir: horarios, qué llevar y qué vamos a conocer.</small>
+              <b>Ver instructivo y guía turística</b>
+              <small>Itinerario, horarios, qué llevar y todo lo que vamos a conocer.</small>
             </span>
+            <span className="reg-guia-ir" aria-hidden="true">↗</span>
           </a>
         )}
         <dl className="reg-resumen">

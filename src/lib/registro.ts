@@ -3,13 +3,15 @@
  * La API vive en Google; el sitio sigue siendo estático. Sin `site.registroApi` y en dev se usan datos de prueba.
  */
 import { mockEnviar, mockViaje } from './registro-mock';
+import { url } from './url';
 
 export type Parada = { nombre: string; direccion: string; maps: string };
 export type ViajePublico = {
   ref: string;
   nombre: string;
   estado: 'abierto' | 'cerrado';
-  /** Link al instructivo y guía turística (se ofrece al terminar el registro). Vacío = sin botón. */
+  /** Instructivo y guía turística que se ofrece al terminar el registro: referencia de una página del sitio
+   *  (`tepoztlan-2026-10` → /viajes/tepoztlan-2026-10/) o un link completo. Vacío = sin botón. */
   guia?: string;
   paradas: Parada[];
 };
@@ -52,11 +54,8 @@ export async function enviarRegistro(api: string, payload: RegistroPayload): Pro
   return res.json();
 }
 
-/** Un link de archivo de Drive (`/file/d/<id>/…` u `open?id=<id>`) se convierte en descarga directa; cualquier otro se deja igual. */
-export function linkDescarga(url: string) {
-  const id = url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([\w-]{20,})/)?.[1];
-  return id ? `https://drive.google.com/uc?export=download&id=${id}` : url;
-}
+/** Liga de la guía: una referencia de viaje apunta a su página en este sitio; un link completo se deja igual. */
+export const linkGuia = (guia: string) => (/^https?:\/\//.test(guia) ? guia : url(`/viajes/${encodeURIComponent(guia)}/`));
 
 /** Mapa embebible sin API key. Los links cortos de Maps no se pueden embeber, así que se ubica por dirección. */
 export const mapaEmbed = (p: Parada) => `https://maps.google.com/maps?q=${encodeURIComponent(p.direccion || p.nombre)}&output=embed`;
