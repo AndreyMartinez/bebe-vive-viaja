@@ -133,3 +133,34 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   html { scroll-behavior: auto; }
 }
+
+/* Audioguía (isla AudioGuide.tsx): hereda el color de la sección donde esté. */
+.ag { display: flex; flex-direction: column; gap: 6px; border-top: 1px solid currentColor; padding-top: 14px; }
+.ag-row { display: grid; grid-template-columns: 46px 1fr; gap: 14px; align-items: center; }
+.ag-btn {
+  width: 46px; height: 46px; border-radius: 50%; border: 1px solid currentColor; background: transparent; color: inherit;
+  display: grid; place-items: center; cursor: pointer; transition: background 0.2s;
+}
+.ag-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; }
+.ag-btn[aria-pressed='false'] svg path { fill: currentColor; }
+.ag-btn:hover { background: color-mix(in srgb, currentColor 12%, transparent); }
+.ag-btn:focus-visible, .ag-bar:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.ag-main { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.ag-top { display: flex; justify-content: space-between; gap: 10px; opacity: 0.75; font-variant-numeric: tabular-nums; }
+.ag-bar { position: relative; height: 14px; cursor: pointer; }
+.ag-bar::before { content: ''; position: absolute; inset: 6px 0; background: currentColor; opacity: 0.25; }
+.ag-bar i { position: absolute; left: 0; top: 6px; height: 2px; background: currentColor; transition: width 0.25s linear; }
+.ag[data-playing] .ag-top span:first-child::before {
+  content: ''; display: inline-block; width: 7px; height: 7px; margin-right: 8px; border-radius: 50%; background: currentColor;
+  animation: ag-pulse 1.4s ease-in-out infinite; vertical-align: 1px;
+}
+.ag-text { align-self: flex-start; }
+.ag-text summary {
+  cursor: pointer; list-style: none; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  display: inline-flex; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid currentColor;
+}
+.ag-text summary::-webkit-details-marker { display: none; }
+.ag-text summary::after { content: '+'; font-size: 14px; }
+.ag-text[open] summary::after { content: '–'; }
+.ag-text .dm { display: flex; flex-direction: column; gap: 10px; padding-top: 10px; font-family: var(--sans); font-size: 14px; font-weight: 300; line-height: 1.6; }
+@keyframes ag-pulse { 50% { opacity: 0.2; } }

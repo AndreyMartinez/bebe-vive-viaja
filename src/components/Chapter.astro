@@ -2,13 +2,18 @@
 import type { Viaje } from '../lib/viajes';
 import Photo from './Photo.astro';
 import RailControls from './islands/RailControls.tsx';
+import AudioGuide from './islands/AudioGuide.tsx';
+import { guideAudio, guideId } from '../lib/audioguia';
 
 type Ch = Viaje['data']['chapters'][number];
 interface Props {
   ch: Ch;
   index: number;
+  /** Slug del viaje (carpeta de sus audioguías) y nombre para la pantalla de bloqueo. */
+  viaje: string;
+  trip: string;
 }
-const { ch, index } = Astro.props;
+const { ch, index, viaje, trip } = Astro.props;
 const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'][index] ?? String(index + 1);
 const dark = ch.theme === 'dusk' || ch.theme === 'night';
 const railId = `rail-${ch.id}`;
@@ -64,6 +69,11 @@ const railId = `rail-${ch.id}`;
         <blockquote class="story">
           <span class="label">{ch.quote.label}</span>
           <p>{ch.quote.text}</p>
+          {ch.quote.guide && (() => {
+            const id = `${ch.id}-leyenda`;
+            const audio = guideAudio(viaje, id, ch.quote.guide.script);
+            return audio.src && <AudioGuide client:idle id={id} title={ch.quote.label} trip={trip} script={ch.quote.guide.script} {...audio} />;
+          })()}
         </blockquote>
       </div>
     )}
@@ -81,6 +91,11 @@ const railId = `rail-${ch.id}`;
               <div class="meta label"><span>{String(i + 1).padStart(2, '0')}</span><span>{p.meta}</span></div>
               <h4>{p.title}</h4>
               <p>{p.text}</p>
+              {p.guide && (() => {
+                const id = guideId(p.title);
+                const audio = guideAudio(viaje, id, p.guide.script);
+                return audio.src && <AudioGuide client:idle id={id} title={p.title} trip={trip} script={p.guide.script} {...audio} />;
+              })()}
               {p.more.length > 0 && (
                 <details class="more">
                   <summary><span class="when-closed">Leer más</span><span class="when-open">Cerrar</span></summary>
@@ -198,6 +213,9 @@ const railId = `rail-${ch.id}`;
   details.more .dm p + p { border-top: 1px solid rgba(255, 255, 255, 0.25); padding-top: 12px; }
   @keyframes dm-in { from { opacity: 0; } }
   @media (prefers-reduced-motion: reduce) { details.more .dm { animation: none; } }
+
+  .story :global(.ag) { margin-top: 28px; max-width: 520px; }
+  .story :global(.ag-text .dm p) { font-family: var(--sans); font-size: 15px; line-height: 1.6; }
 
   .stars {
     position: absolute; inset: 0; z-index: -1; opacity: 0.6;
