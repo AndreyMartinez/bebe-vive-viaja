@@ -66,7 +66,7 @@
       "tags": [{ "text": "Guía digital" }, { "text": "Fotos incluidas" }],
       "quote": {
         "image": "./centro.jpg",
-        "alt": "Calle empedrada del centro de Tepoztlán con el cerro al fondo",
+        "alt": "Calle empedrada del centro de Tepoztlán con puestos de artesanías, una bandera de México y el cerro del Tepozteco al fondo",
         "caption": ["El centro", "Calles empedradas y el cerro de fondo"],
         "label": "La leyenda de Tepoztécatl",
         "text": "Hijo de una doncella del pueblo, fue abandonado de bebé y criado por unos ancianos. Ya grande venció a una serpiente gigante que devoraba ancianos: se dejó tragar y la cortó por dentro con navajas de obsidiana. Hoy su templo corona el cerro."
@@ -176,7 +176,6 @@
   "credits": [
     { "file": "Vista de la ciudad de Tepoztlán desde la pirámide del Tepozteco", "author": "Irisbb221b", "license": "CC BY 4.0" },
     { "file": "Parachuting at the Lublin-Radawiec airfield, 2022 04", "author": "Autor desconocido", "license": "Dominio público" },
-    { "file": "Centro de Tepoztlan, Morelos", "author": "Rafael Moriyama Inukai", "license": "CC BY-SA 4.0" },
     { "file": "Tepozteco La piramide al borde del barranco entre el misterio de la niebla", "author": "Ricardo Navarro", "license": "CC BY-SA 3.0" },
     { "file": "Ex-convent of Dominico de la Nativdad - panoramio", "author": "On^ste82", "license": "CC BY 3.0" },
     { "file": "El mirador del convento de la Natividad", "author": "Barocount", "license": "CC BY-SA 4.0" },
