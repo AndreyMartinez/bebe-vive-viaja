@@ -11,7 +11,8 @@
  */
 
 var PESTANA_VIAJES = 'Viajes';
-var COLS_VIAJES = ['Referencia', 'Nombre', 'Estado', 'Pestaña', 'Carpeta', 'Creado'];
+var COLS_VIAJES = ['Referencia', 'Nombre', 'Estado', 'Pestaña', 'Carpeta', 'Creado', 'Guía'];
+var COL_GUIA = 7; // 1-based, link al instructivo y guía turística del viaje
 var COLS_PARADAS = ['Nombre de parada', 'Dirección', 'Link de Google Maps'];
 var COLS_RESPUESTAS = ['Folio', 'Fecha', 'Parada', 'Dirección', 'Personas', 'Núm. personas', 'Teléfono', 'Comprobante', 'Comprobante validado'];
 var COL_VALIDADO = 9; // 1-based, "Comprobante validado"
@@ -29,13 +30,13 @@ function config_() {
   return p;
 }
 
-/** Lee la pestaña "Viajes". Devuelve [{fila, ref, nombre, estado, pestana, carpeta, creado}]. */
+/** Lee la pestaña "Viajes". Devuelve [{fila, ref, nombre, estado, pestana, carpeta, creado, guia}]. */
 function leerViajes_(respuestas) {
   var sh = respuestas.getSheetByName(PESTANA_VIAJES);
   if (!sh || sh.getLastRow() < 2) return [];
   return sh.getRange(2, 1, sh.getLastRow() - 1, COLS_VIAJES.length).getValues()
     .map(function (r, i) {
-      return { fila: i + 2, ref: String(r[0]).trim(), nombre: String(r[1]), estado: String(r[2]).trim().toLowerCase() === 'cerrado' ? 'cerrado' : 'abierto', pestana: String(r[3]), carpeta: String(r[4]), creado: r[5] };
+      return { fila: i + 2, ref: String(r[0]).trim(), nombre: String(r[1]), estado: String(r[2]).trim().toLowerCase() === 'cerrado' ? 'cerrado' : 'abierto', pestana: String(r[3]), carpeta: String(r[4]), creado: r[5], guia: String(r[6] || '').trim() };
     })
     .filter(function (v) { return v.ref; });
 }

@@ -27,6 +27,7 @@ function estado() {
 function crearViaje(datos) {
   var nombre = String((datos && datos.nombre) || '').trim();
   var ref = String((datos && datos.ref) || '').trim();
+  var guia = validarGuia_(datos && datos.guia);
   if (!nombre || nombre.length > 80) throw new Error('Escribe el nombre del viaje (máx. 80 caracteres).');
   if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(ref) || ref.length > 60) {
     throw new Error('La referencia solo puede llevar minúsculas, números y guiones.');
@@ -60,11 +61,22 @@ function crearViaje(datos) {
     var existentes = raiz.getFoldersByName(pestana);
     var carpeta = existentes.hasNext() ? existentes.next() : raiz.createFolder(pestana);
 
-    hojaViajes_(respuestas).appendRow([ref, nombre, 'abierto', pestana, carpeta.getId(), new Date()]);
+    hojaViajes_(respuestas).appendRow([ref, nombre, 'abierto', pestana, carpeta.getId(), new Date(), guia]);
     SpreadsheetApp.flush();
   } finally {
     lock.releaseLock();
   }
+  return estado();
+}
+
+/** Link del instructivo y guía turística que ve el viajero al terminar su registro. Vacío = sin botón. */
+function cambiarGuia(ref, url) {
+  var guia = validarGuia_(url);
+  var respuestas = SpreadsheetApp.openById(config_().RESPUESTAS_ID);
+  var v = buscarViaje_(respuestas, ref);
+  if (!v) throw new Error('No existe el viaje ' + ref);
+  hojaViajes_(respuestas).getRange(v.fila, COL_GUIA).setValue(guia);
+  SpreadsheetApp.flush();
   return estado();
 }
 
@@ -80,8 +92,27 @@ function cambiarEstado(ref, nuevo) {
 
 // ---------- internas ----------
 
+/** La guía es la referencia de una página de viaje del sitio (p. ej. tepoztlan-2026-10) o un link https completo. */
+function validarGuia_(guia) {
+  guia = String(guia || '').trim();
+  if (guia && !/^https:\/\/\S+$/.test(guia) && !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(guia)) {
+    throw new Error('Escribe la referencia del viaje en el sitio (p. ej. tepoztlan-2026-10) o un link que empiece con https://');
+  }
+  return guia;
+}
+
+/** Liga completa de la guía, para abrirla desde el admin. */
+function ligaGuia_(base, guia) {
+  if (!guia) return '';
+  return /^https:\/\//.test(guia) ? guia : base + '/viajes/' + encodeURIComponent(guia) + '/';
+}
+
 function hojaViajes_(respuestas) {
   var sh = respuestas.getSheetByName(PESTANA_VIAJES);
+  if (sh && !sh.getRange(1, COL_GUIA).getValue()) {
+    // Hojas creadas antes de la columna "Guía"
+    sh.getRange(1, COL_GUIA).setValue(COLS_VIAJES[COL_GUIA - 1]).setFontWeight('bold');
+  }
   if (!sh) {
     sh = respuestas.insertSheet(PESTANA_VIAJES, 0);
     sh.getRange(1, 1, 1, COLS_VIAJES.length).setValues([COLS_VIAJES]).setFontWeight('bold');
@@ -128,6 +159,8 @@ function listarViajes_(cfg, respuestas, paradasSs) {
       urlRespuestas: shR ? respuestas.getUrl() + '#gid=' + shR.getSheetId() : respuestas.getUrl(),
       urlParadas: shP ? paradasSs.getUrl() + '#gid=' + shP.getSheetId() : paradasSs.getUrl(),
       liga: base + '/bienvenida/?viaje=' + encodeURIComponent(v.ref),
+      guia: v.guia,
+      guiaUrl: ligaGuia_(base, v.guia),
     };
   });
 }

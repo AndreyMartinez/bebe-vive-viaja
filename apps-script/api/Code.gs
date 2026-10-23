@@ -2,7 +2,7 @@
  * bvv-api — API pública del registro de viajeros (implementar como app web: ejecutar como "Yo", acceso "Cualquiera").
  * La usa src/components/islands/Registro.tsx. Nunca devuelve IDs ni URLs de hojas o carpetas.
  *
- *   GET  ?action=viaje&ref=<ref>  → { ok, viaje: { ref, nombre, estado, paradas: [{ nombre, direccion, maps }] } }
+ *   GET  ?action=viaje&ref=<ref>  → { ok, viaje: { ref, nombre, estado, guia, paradas: [{ nombre, direccion, maps }] } }
  *   POST (text/plain, JSON)       → { ok, folio } | { ok: false, error, campo? }
  */
 
@@ -17,7 +17,7 @@ function doGet(e) {
     var v = buscarViaje_(SpreadsheetApp.openById(cfg.RESPUESTAS_ID), String(p.ref || '').trim());
     if (!v) return json_({ ok: false, error: 'no_existe' });
     var paradas = leerParadas_(SpreadsheetApp.openById(cfg.PARADAS_ID), v.pestana);
-    return json_({ ok: true, viaje: { ref: v.ref, nombre: v.nombre, estado: v.estado, paradas: paradas } });
+    return json_({ ok: true, viaje: { ref: v.ref, nombre: v.nombre, estado: v.estado, guia: v.guia, paradas: paradas } });
   } catch (err) {
     console.error(err);
     return json_({ ok: false, error: 'error_interno' });

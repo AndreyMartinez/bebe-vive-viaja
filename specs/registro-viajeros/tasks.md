@@ -44,3 +44,8 @@ Mockup aprobado: https://claude.ai/artifact/NwftuUbeVrHZ2Y4GCCuPjL
 - [x] 8. Conectar y verificar
   - `npm run check`, `npm run build`; en el navegador con datos de prueba: estados, mapa, personas, validaciones, doble envío, 375 px y escritorio
   - _Requisitos: todos_
+
+- [x] 9. Instructivo y guía turística en la confirmación
+  - Columna "Guía" en la pestaña `Viajes`; admin: campo al crear y botón "Agregar/Cambiar guía" (`cambiarGuia`); API devuelve `guia`
+  - `Registro.tsx`: botón grande en "¡Listo!" con `linkGuia` (referencia → página `/viajes/<ref>/` del sitio)
+  - _Requisitos: 7.1–7.4_
