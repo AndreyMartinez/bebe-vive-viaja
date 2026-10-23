@@ -258,6 +258,12 @@
       "compact": true
     }
   ],
+  "podcast": {
+    "url": "https://open.spotify.com/episode/1koZA9Z16CMNyhGB8IHzKW",
+    "show": "Savia Raíz: Caminos que se Escuchan",
+    "title": "Tepoztlán: audioguía completa",
+    "text": "Siete paradas en un solo episodio: la leyenda de Tepoztécatl, la pirámide del Tepozteco, el ex convento, el mirador de los arcos, el mercado, los chinelos, los itacates y las nieves. Escúchalo antes de ir, en el camino o de regreso, y compártelo con quien viaja contigo."
+  },
   "checklist": [
     { "text": "Identificación oficial", "hint": "La piden en Skydive" },
     { "text": "Tenis cómodos", "hint": "Nada de sandalias para el salto" },

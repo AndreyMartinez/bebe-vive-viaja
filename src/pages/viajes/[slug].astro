@@ -6,6 +6,7 @@ import Countdown from '../../components/islands/Countdown.tsx';
 import Checklist from '../../components/islands/Checklist.tsx';
 import AudioGuide from '../../components/islands/AudioGuide.tsx';
 import OfflineSave from '../../components/islands/OfflineSave.tsx';
+import ShareLinks from '../../components/islands/ShareLinks.tsx';
 import { guideAudio } from '../../lib/audioguia';
 import mandala from '../../assets/brand/mandala.png';
 import { getImage } from 'astro:assets';
@@ -25,6 +26,8 @@ const cover = await getImage({ src: d.cover, width: 2000, format: 'webp' });
 const og = await getImage({ src: d.cover, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
 // Solo se muestran audioguías con MP3 ya generado: la voz del navegador suena robótica.
 const tourAudio = d.guide && guideAudio(viaje.id, 'tour', d.guide.script);
+// open.spotify.com/episode/<id> → reproductor embebido de Spotify.
+const podcastEmbed = d.podcast?.url.replace(/^https:\/\/open\.spotify\.com\/(episode|show)\/([\w]+).*$/, 'https://open.spotify.com/embed/$1/$2');
 const wa = whatsappLink(`Hola, quiero apartar lugar para ${d.title} + ${d.titleAccent} (${longDate(d.date)})`);
 ---
 <Base title={`${d.title} & ${d.titleAccent}`} description={d.summary} image={og.src} credits={d.credits} manifest={url(`/viajes/${viaje.id}/manifest.webmanifest`)}>
@@ -82,6 +85,25 @@ const wa = whatsappLink(`Hola, quiero apartar lugar para ${d.title} + ${d.titleA
   )}
 
   {d.chapters.map((ch, i) => <Chapter ch={ch} index={i} viaje={viaje.id} trip={`${d.title} & ${d.titleAccent}`} />)}
+
+  {d.podcast && podcastEmbed && (
+    <section class="podcast" id="podcast" aria-labelledby="podcast-h">
+      <div class="in">
+        <div>
+          <span class="label muted">Podcast del destino{d.podcast.show && ` · ${d.podcast.show}`}</span>
+          <h2 id="podcast-h">{d.podcast.title.split(':')[0]} <em>en tu oído</em></h2>
+          <p>{d.podcast.text}</p>
+          <ShareLinks client:visible url={d.podcast.url} text={`${d.podcast.title} 🎧`} />
+        </div>
+        <iframe
+          src={podcastEmbed}
+          title={`Reproductor de Spotify: ${d.podcast.title}`}
+          width="100%" height="232" loading="lazy"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        ></iframe>
+      </div>
+    </section>
+  )}
 
   <section class="list">
     <div class="in">
@@ -206,6 +228,20 @@ const wa = whatsappLink(`Hola, quiero apartar lugar para ${d.title} + ${d.titleA
   .tour h2 em { opacity: 0.75; }
   .tour p { font-size: 17px; line-height: 1.6; font-weight: 300; max-width: 52ch; }
   @media (max-width: 900px) { .tour .in { grid-template-columns: 1fr; padding-block: 56px; } }
+
+  .podcast { background: var(--paper); color: var(--ink); border-block: 1px solid var(--hair); scroll-margin-top: 12px; }
+  .podcast .in { padding-block: 72px; display: grid; grid-template-columns: 5fr 4fr; gap: 28px 72px; align-items: center; }
+  .podcast .in > * { min-width: 0; }
+  .podcast h2 { font-family: var(--serif); font-size: clamp(40px, 5vw, 64px); line-height: 1; margin: 8px 0 18px; }
+  .podcast h2 em { opacity: 0.75; }
+  .podcast p { font-size: 17px; line-height: 1.6; font-weight: 300; max-width: 52ch; }
+  .podcast iframe { display: block; border: 0; border-radius: 12px; }
+  .podcast :global(.share) { margin-top: 28px; border-top: 1px solid var(--ink); padding-top: 16px; }
+  .podcast :global(.share .label) { color: var(--ink-2); }
+  .podcast :global(.share-row) { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+  .podcast :global(.share-row .btn) { padding: 10px 16px; font-size: 11px; }
+  .podcast :global(.share-note) { margin-top: 12px; font-size: 13px; color: var(--ink-2); }
+  @media (max-width: 900px) { .podcast .in { grid-template-columns: 1fr; padding-block: 56px; } }
 
   .list .in { padding-block: 104px; display: grid; grid-template-columns: 1fr 1fr; gap: 72px; }
   .list .in > * { min-width: 0; }

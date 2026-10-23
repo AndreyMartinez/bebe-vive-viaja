@@ -74,6 +74,10 @@ const viajes = defineCollection({
           facts: z.array(fact).default([]),
         }),
       ),
+      /** Episodio de podcast del destino (Spotify). Se muestra con su reproductor y botones para compartir. */
+      podcast: z
+        .object({ url: z.string().url(), title: z.string(), text: z.string(), show: z.string().optional() })
+        .optional(),
       checklist: z.array(z.object({ text: z.string(), hint: z.string().optional() })).default([]),
       quickFacts: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
       credits: z.array(z.object({ file: z.string(), author: z.string(), license: z.string() })).default([]),
