@@ -1,0 +1,131 @@
+---
+// Políticas de cancelación (pill, tarjetas, nota y botón PDF). Las usan /politicas-de-cancelacion/ y /bienvenida/.
+// Se renderiza sin contenedor: el padre debe ser una columna flex (el botón se centra con align-self).
+// Los estilos de impresión de aquí son los de la hoja A4 de la que sale public/politicas-de-cancelacion.pdf.
+import { url } from '../lib/url';
+import mandala from '../assets/brand/mandala.png';
+---
+<section class="pill" aria-label="Importante">
+  <span class="pill-e" aria-hidden="true">✈️</span>
+  <div>
+    <span class="label k">Importante</span>
+    <p class="v">El apartado es <span class="brush">por persona</span></p>
+  </div>
+  <div class="ticket" aria-hidden="true"><b class="brush">1 = 1</b>apartado<br />por viajero</div>
+</section>
+
+<div class="divider"><span class="label">¿Quién cancela?</span></div>
+
+<div class="grid">
+  <section class="card client">
+    <span class="logo card-wm" style={`--src:url(${mandala.src})`} aria-hidden="true"></span>
+    <div class="head"><span class="e" aria-hidden="true">🍷</span><span class="label who">Si cancelas tú</span></div>
+    <h2>Cancelación por parte <span class="brush">del cliente</span></h2>
+    <ul class="rules">
+      <li><span class="mark" aria-hidden="true">✕</span><span><b>No aplica reembolso</b> del apartado.</span></li>
+      <li><span class="mark" aria-hidden="true">✕</span><span><b>No es transferible</b> a acompañantes.</span></li>
+      <li><span class="mark" aria-hidden="true">✕</span><span><b>No puede utilizarse</b> para otros tours.</span></li>
+    </ul>
+  </section>
+
+  <section class="card company">
+    <span class="logo card-wm" style={`--src:url(${mandala.src})`} aria-hidden="true"></span>
+    <div class="head"><span class="e" aria-hidden="true">🌿</span><span class="label who">Si cancelamos nosotros</span></div>
+    <h2>Cancelación por parte <span class="brush">de la empresa</span></h2>
+    <div class="big">
+      <p class="num">100<small>%</small></p>
+      <p class="brush lbl">de reembolso</p>
+      <p class="sub">del monto pagado</p>
+    </div>
+    <p class="check"><span class="mark" aria-hidden="true">✓</span><span>Te devolvemos <b>todo</b> lo que pagaste.</span></p>
+  </section>
+</div>
+
+<p class="note"><span class="e" aria-hidden="true">🐵</span><span>Las condiciones de cancelación por parte del cliente aplican <b>sin excepción</b>.</span></p>
+
+<a class="btn solid dl" href={url('/politicas-de-cancelacion.pdf')} download>Descargar PDF</a>
+
+<style>
+  .brush { font-family: var(--brush); font-weight: 400; }
+
+  .pill {
+    margin-top: 24px; display: flex; align-items: center; gap: 20px;
+    background: var(--white); border: 1.5px solid var(--black); border-radius: 18px;
+    padding: 16px 24px; box-shadow: 8px 8px 0 var(--black);
+  }
+  .pill-e { font-size: 34px; line-height: 1; }
+  .k { color: var(--ink-2); }
+  .v { font-size: clamp(19px, 3.6vw, 24px); font-weight: 700; line-height: 1.25; }
+  .v .brush { font-size: 1.3em; color: var(--wine); }
+  .ticket {
+    margin-left: auto; text-align: center; border-left: 2px dashed var(--sand-line); padding-left: 20px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); line-height: 1.4;
+  }
+  .ticket b { display: block; font-size: 34px; color: var(--ink); line-height: 1.1; letter-spacing: 0; text-transform: none; }
+
+  .divider { display: flex; align-items: center; gap: 16px; margin: 36px 0 18px; color: var(--ink-2); }
+  .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--sand-line); }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .card { position: relative; overflow: hidden; border-radius: 18px; padding: 22px; }
+  .card > * { position: relative; }
+  .client { background: var(--wine-soft); border: 1.5px solid var(--wine-line); }
+  .company { background: var(--leaf-soft); border: 1.5px solid var(--leaf-line); }
+  .card-wm { position: absolute; width: 220px; aspect-ratio: 456 / 290; right: -64px; top: -24px; color: var(--black); opacity: 0.06; }
+  .head { display: flex; align-items: center; gap: 12px; }
+  .head .e { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-size: 20px; background: var(--white); }
+  .who { font-weight: 500; }
+  .client .who, .client h2 .brush, .client b { color: var(--wine); }
+  .company .who, .company h2 .brush, .company b, .company .num { color: var(--leaf); }
+  h2 { margin: 16px 0 18px; font-size: 19px; font-weight: 700; line-height: 1.2; }
+  h2 .brush { display: block; font-size: 1.4em; line-height: 1.2; }
+
+  .rules { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .rules li, .check {
+    display: flex; gap: 12px; align-items: center;
+    background: var(--white); border-radius: 12px; padding: 12px 14px; font-size: 15px; line-height: 1.4;
+  }
+  .rules b, .check b { font-weight: 600; }
+  .mark {
+    flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center;
+    color: var(--white); font-size: 13px; font-weight: 700; line-height: 1;
+  }
+  .client .mark { background: var(--wine); }
+  .company .mark { background: var(--leaf); }
+
+  .big { background: var(--white); border-radius: 12px; text-align: center; padding: 16px; }
+  .num { font-weight: 800; font-size: 76px; line-height: 1; letter-spacing: -0.03em; }
+  .num small { font-size: 0.5em; }
+  .lbl { font-size: 24px; margin-top: 4px; }
+  .sub { font-size: 13px; color: var(--ink-2); }
+  .check { margin-top: 12px; }
+
+  .note {
+    margin-top: 24px; display: flex; gap: 16px; align-items: center;
+    background: var(--black); color: var(--white); border-radius: 18px; padding: 18px 24px; font-size: 15px; line-height: 1.45;
+  }
+  .note .e { font-size: 28px; line-height: 1; }
+  .note b { border-bottom: 2px solid var(--wine-bright); font-weight: 600; }
+
+  .dl { align-self: center; margin-top: 32px; }
+
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
+    .ticket { display: none; }
+    .pill { box-shadow: 6px 6px 0 var(--black); }
+  }
+
+  @media print {
+    .pill { margin-top: 4mm; padding: 4mm 7mm; box-shadow: 2.2mm 2.2mm 0 var(--black); }
+    .ticket { display: block; }
+    .divider { margin: 6mm 0 4mm; }
+    .grid { grid-template-columns: 1fr 1fr; gap: 6mm; }
+    .card { padding: 6mm; }
+    h2 { font-size: 13.5pt; margin: 4mm 0 4.5mm; }
+    .rules li, .check { font-size: 9.6pt; padding: 3.2mm 3.6mm; }
+    .num { font-size: 50pt; }
+    .lbl { font-size: 16pt; }
+    .note { margin-top: 5mm; font-size: 9.6pt; padding: 4.5mm 6mm; }
+    .dl { display: none; }
+  }
+</style>

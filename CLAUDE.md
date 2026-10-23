@@ -32,5 +32,5 @@ Sitio de la agencia de viajes en grupo **Bebe, Vive, Viaja** (salidas desde CDMX
 - Fotos originales en alta resolución (las actuales vienen comprimidas de WhatsApp; las verticales no rotan en el carrusel de escritorio por eso).
 - Dominio final (`SITE_URL`; `robots.txt` ya se genera solo desde `src/pages/robots.txt.ts`).
 
-## Siguiente fase (2): registro de viajeros
-Formulario de apartado (nombre, teléfono, punto de abordaje, personas) → adaptador `@astrojs/cloudflare`, rutas `/api/*` como funciones, D1 (`viajes`, `reservas`, `viajeros`), Turnstile contra spam, aviso por correo/WhatsApp. Mantener las páginas de itinerario estáticas.
+## Registro de viajeros (fase 2, con Google Sheets)
+Spec en `specs/registro-viajeros/`. Liga por viaje `/bienvenida/?viaje=<ref>` (isla `Registro.tsx`) → API en Apps Script (`apps-script/api`, acceso "Cualquiera") → Sheets + Drive de la marca. Admin en `apps-script/admin` (acceso "Solo yo"). URL de la API en `site.registroApi`; vacía en dev = datos de prueba (`?viaje=demo`, `demo-cerrado`, `demo-sin-paradas`). Instalación en `apps-script/README.md`. Si algún día crece (pagos, volumen), migrar a Cloudflare (Workers + D1) según `docs/ARQUITECTURA.md`.

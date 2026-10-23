@@ -7,3 +7,4 @@ dist/
 .DS_Store
 .wrangler/
 muestras-audioguias/
+apps-script/*/Config.gs

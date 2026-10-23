@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <base target="_top">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Geist:wght@300..800&family=Geist+Mono:wght@400;500&display=swap">
+  <style>
+    /* Misma paleta que el sitio (src/styles/global.css) */
+    :root { --ink:#121417; --ink-2:#5b6168; --white:#fff; --black:#000; --sand:#f6f1e8; --sand-line:#e4dccd;
+      --wine:#8c1c2b; --wine-soft:#f7e9ea; --leaf:#33772d; --leaf-dark:#2c6a27; --leaf-soft:#ebf4e6; --leaf-line:#cfe4c6;
+      --sans:'Geist',system-ui,sans-serif; --mono:'Geist Mono',ui-monospace,monospace; --brush:'Kaushan Script',cursive; }
+    *,*::before,*::after { box-sizing:border-box; }
+    body { margin:0; background:var(--sand); color:var(--ink); font-family:var(--sans); font-size:15px; line-height:1.5; }
+    a { color:var(--wine); }
+    .label { font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-2); }
+    header { background:var(--black); color:var(--white); display:flex; flex-wrap:wrap; gap:8px 16px; align-items:center; justify-content:space-between; padding:16px 24px; }
+    header .marca { font-family:var(--brush); font-size:26px; }
+    header .label { color:#d9d9d9; letter-spacing:.2em; margin-left:12px; }
+    header .solo { font-size:13px; opacity:.9; }
+    .wrap { max-width:1240px; margin:0 auto; padding:28px 20px 48px; display:flex; flex-wrap:wrap; gap:28px; align-items:flex-start; }
+    aside { flex:1 1 340px; display:flex; flex-direction:column; gap:20px; }
+    main { flex:999 1 560px; min-width:0; display:flex; flex-direction:column; gap:14px; }
+    .card { background:var(--white); border:1px solid var(--sand-line); border-radius:16px; padding:20px; }
+    .nuevo { border:1.5px solid var(--black); box-shadow:6px 6px 0 var(--black); border-radius:18px; display:flex; flex-direction:column; gap:14px; }
+    h1, h2, h3 { margin:0; }
+    h1 { font-size:21px; } h2 { font-size:21px; } h3 { font-size:17px; }
+    .campo { display:flex; flex-direction:column; gap:6px; }
+    input[type=text] { height:46px; border:1px solid #cfc6b4; border-radius:10px; padding:0 12px; font:inherit; font-size:15px; background:var(--white); color:var(--ink); width:100%; }
+    #ref { font-family:var(--mono); font-size:14px; background:#faf7f1; }
+    .ayuda { font-size:12px; color:var(--ink-2); word-break:break-all; }
+    .nota { background:#faf7f1; border-radius:12px; padding:12px 14px; font-size:13px; color:var(--ink-2); }
+    .nota b { color:var(--ink); }
+    button, .btn { min-height:44px; border-radius:999px; font:inherit; font-size:13px; font-weight:600; cursor:pointer; padding:0 16px;
+      display:inline-flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; }
+    .primario { border:0; background:var(--ink); color:var(--white); font-family:var(--mono); font-weight:400; letter-spacing:.14em; text-transform:uppercase; min-height:50px; }
+    .secundario { border:1.5px solid #cfc6b4; background:var(--white); color:var(--ink); }
+    .oscuro { border:0; background:var(--ink); color:var(--white); }
+    .verde { border:0; background:var(--leaf); color:var(--white); }
+    button:disabled { opacity:.5; cursor:wait; }
+    .hojas a { display:flex; justify-content:space-between; align-items:center; min-height:44px; text-decoration:none; color:var(--ink); font-weight:600; border-bottom:1px solid #efe8da; }
+    .hojas a:last-child { border-bottom:0; }
+    .titulo { display:flex; justify-content:space-between; align-items:baseline; }
+    .viaje { display:flex; flex-wrap:wrap; gap:14px 24px; align-items:center; justify-content:space-between; }
+    .viaje .info { display:flex; flex-direction:column; gap:6px; min-width:0; flex:1 1 300px; }
+    .viaje .fila { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    .estado { font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; border-radius:999px; padding:4px 10px; }
+    .estado.abierto { background:var(--leaf-soft); color:var(--leaf-dark); }
+    .estado.cerrado { background:#ece6da; color:var(--ink-2); }
+    .ref { font-family:var(--mono); font-size:12px; color:var(--ink-2); word-break:break-all; }
+    .datos { display:flex; gap:16px; flex-wrap:wrap; font-size:13px; }
+    .datos b { font-family:var(--mono); font-weight:500; }
+    .acciones { display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
+    .acciones a.link { font-size:13px; font-weight:600; padding:0 10px; min-height:44px; display:inline-flex; align-items:center; }
+    .aviso { border-radius:12px; padding:12px 16px; display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; font-size:14px; }
+    .aviso.ok { background:var(--leaf-soft); border:1.5px solid var(--leaf-line); }
+    .aviso.ok b { color:var(--leaf-dark); }
+    .aviso.error { background:var(--wine-soft); border:1.5px solid #e9c9cd; color:var(--wine); font-weight:600; }
+    .aviso input { flex:1 1 260px; height:40px; font-family:var(--mono); font-size:12px; }
+    .vacio { text-align:center; color:var(--ink-2); }
+    [hidden] { display:none !important; }
+  </style>
+</head>
+<body>
+  <header>
+    <div><span class="marca">Bebe, Vive, Viaja</span><span class="label">Admin de viajes</span></div>
+    <span class="solo">Solo tu cuenta de Google puede abrir esta página</span>
+  </header>
+
+  <div class="wrap">
+    <aside>
+      <form class="card nuevo" id="form" autocomplete="off">
+        <h1>Nuevo viaje</h1>
+        <div class="campo">
+          <label class="label" for="nombre">Nombre del viaje</label>
+          <input type="text" id="nombre" maxlength="80" placeholder="Ej. Guanajuato · Nov 2026" required>
+        </div>
+        <div class="campo">
+          <label class="label" for="ref">Referencia (va en la liga)</label>
+          <input type="text" id="ref" maxlength="60" pattern="[a-z0-9]+(-[a-z0-9]+)*" required>
+          <span class="ayuda" id="previa">…/bienvenida/?viaje=</span>
+        </div>
+        <p class="nota">Al crear el viaje se agregan solas una pestaña en <b>Paradas</b>, otra en <b>Respuestas</b> y una carpeta para los comprobantes. Después llena las paradas en su pestaña.</p>
+        <button type="submit" class="primario" id="crear">Crear viaje</button>
+      </form>
+
+      <section class="card hojas">
+        <h2 class="label" style="margin-bottom:6px">Hojas conectadas</h2>
+        <a id="h-paradas" target="_blank" rel="noopener">BVV · Paradas <span>↗</span></a>
+        <a id="h-respuestas" target="_blank" rel="noopener">BVV · Respuestas <span>↗</span></a>
+        <a id="h-carpeta" target="_blank" rel="noopener">Carpeta de comprobantes <span>↗</span></a>
+      </section>
+    </aside>
+
+    <main>
+      <div class="titulo"><h2>Viajes</h2><span class="label" id="conteo"></span></div>
+      <div class="aviso error" id="error" role="alert" hidden></div>
+      <div class="aviso ok" id="copiada" role="status" hidden>
+        <span><b id="copiada-txt">Liga copiada.</b> Pégala en WhatsApp para el viajero.</span>
+        <input type="text" id="copiada-liga" readonly aria-label="Liga del viaje">
+        <a class="btn verde" id="copiada-wa" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+      </div>
+      <div id="lista"><p class="card vacio">Cargando…</p></div>
+    </main>
+  </div>
+
+  <script>
+    var viajes = [];
+    var $ = function (id) { return document.getElementById(id); };
+    var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+    var refEditada = false;
+
+    function slug(s) {
+      return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
+    }
+    function previa() { $('previa').textContent = '…/bienvenida/?viaje=' + $('ref').value; }
+    $('nombre').addEventListener('input', function () { if (!refEditada) { $('ref').value = slug(this.value); previa(); } });
+    $('ref').addEventListener('input', function () { refEditada = true; previa(); });
+
+    function mostrarError(err) {
+      $('error').textContent = (err && err.message) || String(err);
+      $('error').hidden = false;
+    }
+    function llamar(fn, args, listo) {
+      $('error').hidden = true;
+      var r = google.script.run.withSuccessHandler(function (d) { pintar(d); if (listo) listo(); })
+        .withFailureHandler(function (e) { mostrarError(e); if (listo) listo(); });
+      r[fn].apply(r, args || []);
+    }
+
+    function pintar(d) {
+      $('h-paradas').href = d.hojas.paradas;
+      $('h-respuestas').href = d.hojas.respuestas;
+      $('h-carpeta').href = d.hojas.carpeta;
+      viajes = d.viajes.slice().reverse(); // más recientes arriba
+      $('conteo').textContent = viajes.length + (viajes.length === 1 ? ' viaje' : ' viajes');
+      if (!viajes.length) {
+        $('lista').innerHTML = '<p class="card vacio">Aún no hay viajes. Crea el primero a la izquierda.</p>';
+        return;
+      }
+      $('lista').innerHTML = viajes.map(function (v, i) {
+        var cerrado = v.estado === 'cerrado';
+        return '<article class="card viaje" style="margin-bottom:14px">' +
+          '<div class="info"><div class="fila"><h3>' + esc(v.nombre) + '</h3><span class="estado ' + v.estado + '">' + (cerrado ? 'Cerrado' : 'Abierto') + '</span></div>' +
+          '<span class="ref">?viaje=' + esc(v.ref) + '</span>' +
+          '<div class="datos"><span><b>' + v.registros + '</b> registros</span><span><b>' + v.personas + '</b> personas</span>' +
+          '<span><b>' + v.pendientes + '</b> comprobantes por validar</span><span><b>' + v.paradas + '</b> paradas</span></div></div>' +
+          '<div class="acciones">' +
+          '<a class="link" href="' + esc(v.urlParadas) + '" target="_blank" rel="noopener">Paradas ↗</a>' +
+          '<a class="link" href="' + esc(v.urlRespuestas) + '" target="_blank" rel="noopener">Respuestas ↗</a>' +
+          '<button type="button" class="secundario" data-estado="' + i + '">' + (cerrado ? 'Reabrir' : 'Cerrar registro') + '</button>' +
+          '<button type="button" class="oscuro" data-compartir="' + i + '">Compartir liga</button>' +
+          '</div></article>';
+      }).join('');
+    }
+
+    $('lista').addEventListener('click', function (e) {
+      var b = e.target.closest('button');
+      if (!b) return;
+      if (b.dataset.compartir != null) return compartir(viajes[+b.dataset.compartir]);
+      if (b.dataset.estado != null) {
+        var v = viajes[+b.dataset.estado];
+        var nuevo = v.estado === 'cerrado' ? 'abierto' : 'cerrado';
+        if (nuevo === 'cerrado' && !confirm('¿Cerrar el registro de "' + v.nombre + '"? La liga dejará de aceptar registros.')) return;
+        b.disabled = true;
+        llamar('cambiarEstado', [v.ref, nuevo]);
+      }
+    });
+
+    // Compartir: menú nativo si existe; si no, copiar (portapapeles o selección) y ofrecer WhatsApp.
+    function compartir(v) {
+      var texto = '¡Bienvenida al viaje ' + v.nombre + '! Aquí eliges tu punto de abordaje y subes tu comprobante:';
+      $('copiada-liga').value = v.liga;
+      $('copiada-wa').href = 'https://wa.me/?text=' + encodeURIComponent(texto + ' ' + v.liga);
+      if (navigator.share) {
+        navigator.share({ title: v.nombre, text: texto, url: v.liga }).catch(function () { copiar(v.liga); });
+        return;
+      }
+      copiar(v.liga);
+    }
+    function copiar(liga) {
+      var listo = function (ok) {
+        $('copiada-txt').textContent = ok ? 'Liga copiada.' : 'Copia la liga:';
+        $('copiada').hidden = false;
+        if (!ok) $('copiada-liga').select();
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(liga).then(function () { listo(true); }, function () { listo(copiarSeleccion()); });
+      } else {
+        listo(copiarSeleccion());
+      }
+    }
+    function copiarSeleccion() {
+      $('copiada').hidden = false;
+      var i = $('copiada-liga');
+      i.focus(); i.select();
+      try { return document.execCommand('copy'); } catch (_) { return false; }
+    }
+
+    $('form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!this.reportValidity()) return;
+      $('crear').disabled = true;
+      $('crear').textContent = 'Creando…';
+      llamar('crearViaje', [{ nombre: $('nombre').value.trim(), ref: $('ref').value.trim() }], function () {
+        $('crear').disabled = false;
+        $('crear').textContent = 'Crear viaje';
+        if ($('error').hidden) { $('form').reset(); refEditada = false; previa(); }
+      });
+    });
+
+    llamar('estado');
+  </script>
+</body>
+</html>

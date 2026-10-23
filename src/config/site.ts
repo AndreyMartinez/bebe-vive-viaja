@@ -12,6 +12,8 @@ export const site = {
   facebook: 'bebeviveviaja',
   tiktok: 'bebeviveviajamx',
   origins: ['CDMX', 'Toluca'],
+  // URL /exec de la API de Apps Script (apps-script/api). Es pública, no es secreto. Vacío en dev = datos de prueba.
+  registroApi: 'https://script.google.com/macros/s/AKfycbwHWDK5WYdsn67llUnZC7GQvBqeQQHdo72cUPjaZjUNcGN1R784O_gtXhABrOBhxAkoQQ/exec',
 };
 
 export const whatsappLink = (text: string) =>
