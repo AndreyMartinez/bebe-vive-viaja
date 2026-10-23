@@ -1,0 +1,70 @@
+---
+import { url } from '../lib/url';
+import Base from '../layouts/Base.astro';
+/**
+ * Se guarda junto con cada viaje y el service worker la muestra cuando no hay red
+ * y la página pedida no está guardada. Ver specs/offline-viajes/.
+ */
+---
+<Base title="Sin conexión" noindex>
+  <main class="off">
+    <div class="in">
+      <span class="label">Sin conexión</span>
+      <h1>Aquí no hay <em>señal</em></h1>
+      <p>Esta página no está guardada en tu teléfono.<span id="intro" hidden> Lo que sí guardaste funciona sin internet:</span></p>
+      <ul class="saved" id="saved" aria-live="polite"></ul>
+      <p class="none" id="none" hidden>Todavía no guardas ningún viaje. Abre la página de tu viaje con señal y toca <b>Guardar para usar sin señal</b>.</p>
+      <a class="btn" href={url('/')}>Intentar de nuevo</a>
+    </div>
+  </main>
+</Base>
+
+<script>
+  // Lista los viajes guardados leyendo el `__meta` de cada caché `bvv-viaje-*` (lo escribe src/lib/offline.ts).
+  async function list() {
+    const ul = document.getElementById('saved')!;
+    const none = document.getElementById('none')!;
+    const trips: { title: string; page: string; savedAt: string }[] = [];
+    try {
+      for (const name of await caches.keys()) {
+        if (!name.startsWith('bvv-viaje-')) continue;
+        const cache = await caches.open(name);
+        for (const req of await cache.keys()) {
+          if (!req.url.includes('/__meta/')) continue;
+          const res = await cache.match(req);
+          if (res) trips.push(await res.json());
+        }
+      }
+    } catch {
+      /* sin Cache API: no hay nada guardado que listar */
+    }
+    none.hidden = trips.length > 0;
+    document.getElementById('intro')!.hidden = trips.length === 0;
+    for (const t of trips) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = t.page;
+      a.textContent = t.title;
+      const small = document.createElement('span');
+      small.className = 'label';
+      small.textContent = `Guardado ${new Date(t.savedAt).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}`;
+      li.append(a, small);
+      ul.append(li);
+    }
+  }
+  list();
+</script>
+
+<style>
+  .off { background: var(--mist); color: var(--mist-ink); }
+  .in { min-height: 70vh; padding-block: 120px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 24px; }
+  h1 { font-family: var(--serif); font-size: clamp(56px, 9vw, 120px); line-height: 0.92; }
+  h1 em { opacity: 0.75; }
+  p { font-size: 18px; font-weight: 300; max-width: 52ch; }
+  .saved { list-style: none; margin: 0; padding: 0; width: 100%; max-width: 560px; border-top: 1px solid currentColor; }
+  .saved:empty { display: none; }
+  .saved :global(li) { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--hair); }
+  .saved :global(a) { font-family: var(--serif); font-size: 28px; line-height: 1.1; text-decoration: none; }
+  .saved :global(a:hover) { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .saved :global(.label) { opacity: 0.7; white-space: nowrap; }
+</style>
