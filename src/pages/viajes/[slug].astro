@@ -4,6 +4,8 @@ import Base from '../../layouts/Base.astro';
 import Chapter from '../../components/Chapter.astro';
 import Countdown from '../../components/islands/Countdown.tsx';
 import Checklist from '../../components/islands/Checklist.tsx';
+import AudioGuide from '../../components/islands/AudioGuide.tsx';
+import { guideAudio } from '../../lib/audioguia';
 import mandala from '../../assets/brand/mandala.png';
 import { getImage } from 'astro:assets';
 import { getViajes, departure, arrivalHome, longDate, codeDate, type Viaje } from '../../lib/viajes';
@@ -20,6 +22,8 @@ const departAt = departure(viaje);
 const endAt = arrivalHome(viaje);
 const cover = await getImage({ src: d.cover, width: 2000, format: 'webp' });
 const og = await getImage({ src: d.cover, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+// Solo se muestran audioguías con MP3 ya generado: la voz del navegador suena robótica.
+const tourAudio = d.guide && guideAudio(viaje.id, 'tour', d.guide.script);
 const wa = whatsappLink(`Hola, quiero apartar lugar para ${d.title} + ${d.titleAccent} (${longDate(d.date)})`);
 ---
 <Base title={`${d.title} & ${d.titleAccent}`} description={d.summary} image={og.src} credits={d.credits}>
@@ -53,7 +57,20 @@ const wa = whatsappLink(`Hola, quiero apartar lugar para ${d.title} + ${d.titleA
     </div>
   </nav>
 
-  {d.chapters.map((ch, i) => <Chapter ch={ch} index={i} />)}
+  {d.guide && tourAudio?.src && (
+    <section class="tour" aria-labelledby="tour-h">
+      <div class="in">
+        <div>
+          <span class="label muted">Antes de empezar · Audioguía del tour</span>
+          <h2 id="tour-h">Escucha <em>el día</em></h2>
+          <p>Del salto al último brindis: la historia del paracaídas, la tierra de Zapata, Tepoztlán y el atardecer. Ponte audífonos en la avioneta o en el camino.</p>
+        </div>
+        <AudioGuide client:idle id="tour" title="Audioguía del tour" trip={`${d.title} & ${d.titleAccent}`} script={d.guide.script} {...tourAudio} />
+      </div>
+    </section>
+  )}
+
+  {d.chapters.map((ch, i) => <Chapter ch={ch} index={i} viaje={viaje.id} trip={`${d.title} & ${d.titleAccent}`} />)}
 
   <section class="list">
     <div class="in">
@@ -131,6 +148,14 @@ const wa = whatsappLink(`Hola, quiero apartar lugar para ${d.title} + ${d.titleA
   .toc b { font-weight: 500; font-size: 15px; line-height: 1.3; }
   .toc a:hover b { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
 
+  .tour { background: var(--paper); color: var(--ink); border-bottom: 1px solid var(--hair); }
+  .tour .in { padding-block: 72px; display: grid; grid-template-columns: 5fr 4fr; gap: 28px 72px; align-items: end; }
+  .tour .in > * { min-width: 0; }
+  .tour h2 { font-family: var(--serif); font-size: clamp(40px, 5vw, 64px); line-height: 1; margin: 8px 0 18px; }
+  .tour h2 em { opacity: 0.75; }
+  .tour p { font-size: 17px; line-height: 1.6; font-weight: 300; max-width: 52ch; }
+  @media (max-width: 900px) { .tour .in { grid-template-columns: 1fr; padding-block: 56px; } }
+
   .list .in { padding-block: 104px; display: grid; grid-template-columns: 1fr 1fr; gap: 72px; }
   .list .in > * { min-width: 0; }
   .muted { color: var(--ink-2); }
@@ -161,6 +186,14 @@ const wa = whatsappLink(`Hola, quiero apartar lugar para ${d.title} + ${d.titleA
     .hero-foot :global(.cd .u) { padding: 0 10px; }
     .hero-foot :global(.cd .u b) { font-size: 36px; }
     .kv div { grid-template-columns: 96px 1fr; }
-    .list .in { padding-block: 72px; }
+    .tour { background: var(--paper); color: var(--ink); border-bottom: 1px solid var(--hair); }
+  .tour .in { padding-block: 72px; display: grid; grid-template-columns: 5fr 4fr; gap: 28px 72px; align-items: end; }
+  .tour .in > * { min-width: 0; }
+  .tour h2 { font-family: var(--serif); font-size: clamp(40px, 5vw, 64px); line-height: 1; margin: 8px 0 18px; }
+  .tour h2 em { opacity: 0.75; }
+  .tour p { font-size: 17px; line-height: 1.6; font-weight: 300; max-width: 52ch; }
+  @media (max-width: 900px) { .tour .in { grid-template-columns: 1fr; padding-block: 56px; } }
+
+  .list .in { padding-block: 72px; }
   }
 </style>
