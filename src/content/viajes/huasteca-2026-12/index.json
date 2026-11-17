@@ -1,0 +1,225 @@
+{
+  "title": "Tamul y El Meco",
+  "titleAccent": "Huasteca Potosina",
+  "subtitle": "4 días y 3 noches en San Luis Potosí",
+  "summary": "Aguas color turquesa, selva y cascadas gigantes: navegamos en balsa hasta la Cascada de Tamul y conocemos El Meco, con hotel en el centro de Ciudad Valles.",
+  "date": "2026-12-09",
+  "start": "22:00",
+  "end": "23:59",
+  "utcOffset": "-06:00",
+  "region": "Huasteca Potosina, San Luis Potosí",
+  "origins": ["Jocotitlán", "Toluca", "CDMX"],
+  "status": "abierto",
+  "cover": "./tamul-balsa.jpg",
+  "coverAlt": "Grupo en una balsa de madera frente a una cascada de aguas turquesa en la Huasteca Potosina",
+  "guide": {
+    "voice": "Enceladus",
+    "style": "Narrador íntimo que acompaña al viajero en el camión, de madrugada, rumbo a la Huasteca. Voz baja y cálida, con curiosidad contenida; se ilumina al describir las cascadas; da los consejos con tono de amigo que ya estuvo ahí; cierra en susurro, invitando a descansar.",
+    "script": [
+      "Escucha… Afuera todavía está oscuro y el camión avanza hacia el norte. Cuando amanezca, el paisaje va a ser otro: cerros cubiertos de selva, neblina en los valles y ríos de un color que parece pintado. Esta es la audioguía de tu viaje a la Huasteca Potosina.",
+      "La Huasteca no es una ciudad ni un municipio. Es una región que se reparte entre San Luis Potosí, Veracruz, Hidalgo, Tamaulipas y otros estados… y toma su nombre de los huastecos, el pueblo que se llama a sí mismo téenek. Aquí se sigue hablando téenek y náhuatl, y muchos de los nombres que vas a escuchar estos días vienen de esas lenguas.",
+      "Vas a ver ríos que cambian de color con la luz… y cascadas que el propio río ha ido construyendo. ¿Cómo puede un río construir algo? Cada audioguía te lo va a contar cuando estés frente al agua.",
+      "Tu base es Ciudad Valles, la puerta de entrada a la región. Desde ahí salimos a dos lugares que justifican el viaje entero. Uno es la Cascada de Tamul: para llegar hay que subir el río en balsa de madera, entre paredes de roca, hasta quedar frente a una caída de más de cien metros. El otro es El Meco, cerca de El Naranjo: una cascada escalonada a la que te acercas en balsa hasta sentir la brisa en la cara.",
+      "Un par de consejos de alguien que ya estuvo aquí. Lleva zapato que se pueda mojar. Usa el chaleco aunque sepas nadar: el río tiene corrientes que no se ven desde arriba. Y protege el celular… vas a querer fotos desde la balsa.",
+      "Ahora descansa. Cierra los ojos un rato… Cuando los abras, el aire va a estar más tibio y más húmedo. Esa es la primera señal de que ya llegaste."
+    ]
+  },
+  "chapters": [
+    {
+      "id": "salida",
+      "start": "22:00",
+      "end": "06:00",
+      "kicker": "Miércoles 9",
+      "theme": "night",
+      "tocLabel": "La salida",
+      "heading": "Nos vamos",
+      "headingEm": "de noche",
+      "lead": "Salimos el miércoles por la noche y vamos recogiendo al grupo en cada punto de abordaje. Viajamos de madrugada para llegar a la Huasteca con el día por delante. Duerme en el camión: vienen días de agua y caminata.",
+      "tags": [
+        { "text": "Desviación de Joco" },
+        { "text": "Patio Toluca" },
+        { "text": "El Yaqui" },
+        { "text": "Metro San Antonio" },
+        { "text": "Hora de cada punto por confirmar", "tbd": true }
+      ],
+      "facts": [
+        { "label": "A bordo", "text": "Seguro de viajero incluido y coordinador de viaje durante toda la experiencia." },
+        { "label": "Para dormir", "text": "Lleva almohada de viaje y una cobija ligera. En la madrugada el camión refresca." }
+      ]
+    },
+    {
+      "id": "valles",
+      "start": "07:00",
+      "end": "20:00",
+      "kicker": "Jueves 10",
+      "theme": "mist",
+      "tocLabel": "Ciudad Valles",
+      "heading": "Ciudad Valles,",
+      "headingEm": "nuestra base",
+      "lead": "Llegamos a Ciudad Valles, la puerta de entrada a la Huasteca Potosina. Nos hospedamos tres noches en un hotel en el centro, en habitación cuádruple. Desde aquí salimos cada día a las cascadas.",
+      "tags": [
+        { "text": "3 noches de hotel" },
+        { "text": "Habitación cuádruple" },
+        { "text": "Doble: +$300 por persona" },
+        { "text": "Actividades del día por confirmar", "tbd": true }
+      ],
+      "feature": {
+        "image": "./rio-aereo.jpg",
+        "alt": "Vista aérea de un río azul entre la selva de San Luis Potosí",
+        "caption": ["Río entre la selva", "San Luis Potosí"]
+      }
+    },
+    {
+      "id": "tamul",
+      "start": "08:00",
+      "end": "17:00",
+      "kicker": "Cascada de Tamul",
+      "theme": "sage",
+      "tocLabel": "Tamul",
+      "heading": "Remando",
+      "headingEm": "hasta Tamul",
+      "lead": "Navegamos en balsa de madera por el río Tampaón, entre paredes de roca cubiertas de vegetación, hasta llegar a la Cascada de Tamul. Recorrido con guía acreditado y chaleco de flotabilidad. Según el nivel del río, parte del trayecto se hace remando.",
+      "tags": [
+        { "text": "Paseo en balsa incluido" },
+        { "text": "Entrada incluida" },
+        { "text": "Chaleco de flotabilidad" },
+        { "text": "Día exacto por confirmar", "tbd": true }
+      ],
+      "stats": [
+        { "value": "105 m", "label": "Altura de la caída" }
+      ],
+      "feature": {
+        "image": "./tamul-aerea.jpg",
+        "alt": "Vista aérea de la Cascada de Tamul rodeada de vegetación",
+        "caption": ["Cascada de Tamul", "Aquismón, SLP"]
+      },
+      "placesTitle": "El camino",
+      "placesTitleEm": "por el río",
+      "places": [
+        {
+          "image": "./canon-rio.jpg",
+          "alt": "Río tranquilo entre acantilados cubiertos de bosque",
+          "meta": "En balsa",
+          "title": "Río Tampaón",
+          "text": "El río corre por un cañón de paredes altas y verdes. El agua cambia de azul a turquesa según la luz.",
+          "guide": {
+            "voice": "Enceladus",
+            "style": "Narrador cercano que va sentado en la balsa junto al viajero. Voz tranquila y curiosa, como quien señala cosas en voz baja para no romper el silencio del cañón. Se vuelve contemplativo en el último párrafo.",
+            "script": [
+              "Mira el agua alrededor de la balsa. A veces azul, a veces verde… a veces casi transparente. ¿Por qué cambia tanto?",
+              "Estás en el río Tampaón, que corre por un cañón de paredes altas de roca caliza. El agua que lo alimenta se filtró antes por la sierra y trae disuelto carbonato de calcio. Cuando le da el sol, el río se ve turquesa. Cuando el cielo se nubla, el color se apaga. Y después de una tormenta fuerte, baja café, cargado de tierra.",
+              "Ahora fíjate en las paredes del cañón. Hay formaciones que parecen cera derretida, cortinas de piedra que cuelgan sobre el agua. Son depósitos de ese mismo mineral… el río construyendo mientras corre. Si la balsa pasa cerca, vas a notar que la piedra no es lisa: es porosa, llena de huecos pequeños, como una esponja que se volvió roca.",
+              "Para llegar a Tamul, la balsa avanza contra la corriente. Según el nivel del río, a veces toca remar o bajar en los tramos de poca profundidad para ayudar a empujar. No es una carrera: el ritmo lo marcan los remeros, que conocen cada piedra.",
+              "Escucha… Fuera del agua, la selva no se calla. Pájaros, insectos, el viento entre los árboles. Este río sigue muchos kilómetros más, hasta llegar al Golfo de México. Tú solo vas a recorrer un pedazo… pero es el pedazo que la gente viene a buscar desde todo el país."
+            ]
+          }
+        },
+        {
+          "image": "./tamul-balsa.jpg",
+          "alt": "Balsa de madera con viajeros frente a una cascada",
+          "meta": "105 metros",
+          "title": "Cascada de Tamul",
+          "text": "La caída de agua más alta de San Luis Potosí, vista desde la balsa.",
+          "guide": {
+            "voice": "Enceladus",
+            "style": "Narrador íntimo que acompaña al viajero en la balsa. Empieza casi en susurro y con tensión contenida mientras se acercan; se abre con asombro sereno al revelar la cascada; cierra en calma, como quien pide un momento de silencio.",
+            "script": [
+              "Antes de ver la cascada… la vas a oír. Primero es un murmullo detrás de la curva del río. Luego un rumor que no se detiene. Y de pronto, el cañón se abre.",
+              "Estás frente a la Cascada de Tamul. Mide alrededor de ciento cinco metros: es la caída de agua más alta de San Luis Potosí. Pero fíjate bien de dónde viene. El agua no baja por el río en el que estás. Cae desde arriba, desde otro río, el Gallinas, que llega hasta el borde del cañón… y se lanza al vacío sobre el río Santa María.",
+              "Es el encuentro de dos ríos. Y desde aquí, río abajo, el agua toma otro nombre: Tampaón. Por eso el camino que acabas de recorrer tiene un nombre… y la cascada, otro.",
+              "Su ancho cambia con las estaciones. En época de lluvias, Tamul se abre como una cortina enorme y el agua baja color tierra. En los meses secos se vuelve más delgada, y el río al pie suele verse más claro.",
+              "Ahora mira hacia arriba, al borde del cañón. ¿Ves cómo la roca forma una especie de labio sobre el vacío? Ese borde lo ha ido tallando el agua durante miles de años.",
+              "Quédate un momento sin tomar fotos. Siente la brisa que llega hasta la balsa… viene de más de cien metros de altura. Y cuando des la vuelta, el río te va a llevar de regreso, esta vez a favor de la corriente."
+            ]
+          }
+        }
+      ],
+      "facts": [
+        { "label": "De dónde viene", "text": "En Tamul, el río Gallinas cae sobre el río Santa María. Más abajo, el río toma el nombre de Tampaón." },
+        { "label": "Cuándo es más azul", "text": "En temporada seca el agua es más clara y turquesa. Después de lluvias puede verse verde o café." }
+      ]
+    },
+    {
+      "id": "meco",
+      "start": "08:00",
+      "end": "17:00",
+      "kicker": "Cascada El Meco",
+      "theme": "paper",
+      "tocLabel": "El Meco",
+      "heading": "El Meco,",
+      "headingEm": "de frente",
+      "lead": "Visitamos la Cascada El Meco, cerca de El Naranjo: una caída escalonada rodeada de selva. Hacemos el paseo en balsa hasta su base para verla de frente, con tiempo para fotos y para disfrutar del agua color turquesa.",
+      "tags": [
+        { "text": "Paseo en balsa incluido" },
+        { "text": "Entrada incluida" },
+        { "text": "Fotos y video incluidos" },
+        { "text": "Día exacto por confirmar", "tbd": true }
+      ],
+      "feature": {
+        "image": "./rio-rocas.jpg",
+        "alt": "Río que corre entre rocas en San Luis Potosí",
+        "caption": ["Río entre rocas", "San Luis Potosí"]
+      },
+      "places": [
+        {
+          "image": "./el-meco.jpg",
+          "alt": "Cascada El Meco cayendo entre rocas y vegetación",
+          "meta": "Río El Salto",
+          "title": "Cascada El Meco",
+          "text": "Una escalera de agua cerca de El Naranjo, que se ve de frente desde la balsa.",
+          "guide": {
+            "voice": "Enceladus",
+            "style": "Narrador cercano y curioso que va descubriendo la cascada con el viajero. Tono de quien comparte un secreto de la naturaleza; pausas antes de explicar cómo se formaron las terrazas; cierre cálido y luminoso.",
+            "script": [
+              "Desde el embarcadero, El Meco parece una sola cortina blanca. Pero cuando la balsa se acerca… aparecen los escalones.",
+              "Estás frente a la Cascada El Meco, cerca de El Naranjo, sobre el río El Salto. El agua no cae de un solo golpe. Baja por terrazas de piedra, de una a otra, y se abre en varios chorros antes de llegar a la poza. Desde la balsa, intenta contar los escalones que alcanzas a ver… no son iguales: cada uno tiene su propio ancho, su propia caída y su propio sonido.",
+              "Esas terrazas no las hizo nadie… las fue armando el río. El agua llega cargada de carbonato de calcio y, al caer y salpicar, lo va dejando sobre las rocas y las raíces. Esa piedra nueva se llama travertino. Capa por capa, durante miles de años, la cascada se construye a sí misma.",
+              "Ahora busca en las orillas: vas a ver raíces y ramas cubiertas de esa misma piedra, como si se hubieran quedado congeladas. Y si la balsa se acerca lo suficiente, cierra los ojos y siente la brisa en la cara. Cuando le da el sol, a veces se forma un arcoíris sobre la poza.",
+              "Antes de regresar, voltea una vez más. Vista desde abajo, El Meco ya no es una cortina: es una escalera de agua. Y acabas de subirla con los ojos."
+            ]
+          }
+        },
+        {
+          "image": "./cascada-turquesa.jpg",
+          "alt": "Vista aérea de una cascada que cae a una poza turquesa en la selva",
+          "meta": "Agua turquesa",
+          "title": "El color de la Huasteca",
+          "text": "El agua de la región corre sobre roca caliza; por eso en temporada seca toma ese color turquesa."
+        }
+      ]
+    },
+    {
+      "id": "regreso",
+      "start": "08:00",
+      "end": "23:59",
+      "kicker": "Domingo 13",
+      "theme": "night",
+      "tocLabel": "El regreso",
+      "heading": "De vuelta",
+      "headingEm": "a casa",
+      "lead": "Después del check-out regresamos hacia Toluca y CDMX y dejamos a cada quien en su punto de abordaje. Hora de llegada por confirmar.",
+      "compact": true
+    }
+  ],
+  "checklist": [
+    { "text": "Identificación oficial" },
+    { "text": "Traje de baño y toalla de microfibra" },
+    { "text": "Zapato acuático o sandalia que se ajuste", "hint": "Hay piedras y tramos mojados" },
+    { "text": "Bloqueador biodegradable y repelente", "hint": "Cuidan el río y te protegen de moscos" },
+    { "text": "Funda impermeable para el celular", "hint": "Vas a querer fotos desde la balsa" },
+    { "text": "Ropa de cambio por día" },
+    { "text": "Almohada de viaje y cobija ligera", "hint": "Para la noche en camión" },
+    { "text": "Efectivo y tarjeta", "hint": "Comida, bebidas y propinas van por tu cuenta" }
+  ],
+  "quickFacts": [
+    { "label": "Fechas", "value": "Miércoles 9 al domingo 13 de diciembre de 2026" },
+    { "label": "Salida", "value": "Miércoles por la noche (hora por confirmar)" },
+    { "label": "Abordaje", "value": "Desviación de Joco · Patio Toluca · El Yaqui · Metro San Antonio" },
+    { "label": "Precio", "value": "$6,000 MXN por persona en habitación cuádruple" },
+    { "label": "Habitación doble", "value": "+$300 MXN por persona" },
+    { "label": "Pagos", "value": "Transferencia o tarjeta de crédito a meses sin intereses" },
+    { "label": "Incluye", "value": "Transporte redondo, seguro de viajero, 3 noches de hotel en el centro de Ciudad Valles, entradas, paseo en balsa en Tamul y El Meco, chaleco, guía acreditado, coordinador, botiquín, fotos y video" },
+    { "label": "No incluye", "value": "Alimentos, bebidas, propinas y actividades opcionales no mencionadas" }
+  ],
+  "credits": []
+}
