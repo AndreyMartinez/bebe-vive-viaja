@@ -3,8 +3,8 @@ export const site = {
   name: 'Bebe, Vive, Viaja',
   tagline: 'Viajes en grupo para salir de la rutina',
   description: 'Itinerarios y próximos viajes de Bebe, Vive, Viaja: escapadas en grupo con salidas desde CDMX y Toluca.',
-  // TODO: pon el número real en formato internacional sin signos, p. ej. 5215512345678
-  whatsapp: '',
+  // Número en formato internacional sin signos (52 + 10 dígitos)
+  whatsapp: '525551013505',
   // Usuarios de redes, sin @
   instagram: 'bebeviveviaja',
   // TODO: ID del feed de Behold (behold.so) para mostrar la cuadrícula del perfil. Vacío = tarjeta con enlace.
