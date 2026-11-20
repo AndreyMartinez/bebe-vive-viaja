@@ -26,6 +26,9 @@ Sitio de la agencia de viajes en grupo **Bebe, Vive, Viaja** (salidas desde CDMX
 - Créditos de fotos de Wikimedia Commons van en `credits` del JSON y se muestran en el pie (obligatorio por licencia CC BY / BY-SA).
 - La fecha/hora de los viajes es hora del centro de México (`utcOffset: "-06:00"`, sin horario de verano).
 
+## Venta en plataformas
+Viator (proveedor 5708623) y otras OTA: estado de cada producto, configuración, diagnóstico y plan en `docs/PLATAFORMAS.md`. Actualizarlo cada vez que se cambie algo en el portal.
+
 ## Pendientes
 - `src/config/site.ts`: confirmar `tagline`. (WhatsApp, Instagram, Facebook y TikTok ya están.)
 - Tepoztlán (24 oct 2026): puntos de abordaje, nombre del Skydive, terraza del convivio.
